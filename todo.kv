@@ -1,0 +1,95 @@
+# kivy 2.0.0.
+#:import sp kivy.metrics.sp
+#:import dp kivy.metrics.dp
+
+<ActiveTasks>:
+    orientation: 'vertical'
+
+    canvas.before:
+        Color:
+            rgb: .6, .6, .6
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            # source: 'data/background.png'
+
+    SomeMenu_ActionBar:
+        id: ActionBar
+
+    ScreenManager:
+        id: sm
+        WelcomeScreen:
+        ActiveTasksScreen:
+        ShoppingListScreen:
+
+<ReturnButton@Button>
+    text: ' Wróć \n do menu'
+    pos_hint: center
+    font_size: 20
+    background_color: 0, .2, 0, 1
+    pos_hint: {"x": .02, "y": .02}
+    size_hint: 0.2, 0.2
+    on_release: app.root.ids.sm.current = 'welcome'
+
+<SomeMenu_ActionBar@ActionBar>:
+    background_color: 0, .7, 0, .7
+    ActionView:
+        id: ActionView
+
+        HiddenIcon_ActionPrevious:
+
+        ActionGroup:
+            id: App_ActionGroup
+            mode: 'spinner'
+            text: 'Menu'
+
+            ActionButton:
+                text: 'Navigation'
+                on_release: app.root.ids.sm.current = 'welcome'
+
+            ActionButton:
+                text: 'Active Tasks'
+                on_release: app.root.ids.sm.current = 'first'
+            ActionButton:
+                text: 'Shopping List'
+                on_release:  app.root.ids.sm.current = 'second'
+
+        ActionButton:
+            text: 'Quit'
+            on_press: app.get_running_app().stop()
+
+
+<HiddenIcon_ActionPrevious@ActionPrevious>:
+    title: 'To-Do App'   # app.title if app.title is not None else 'Action Previous'
+    with_previous: False
+    app_icon: ''
+#    app_icon_width: 0
+#    app_icon_height: 0
+#    size_hint_x: None
+    width: len(self.title) * 10
+
+<WelcomeScreen>:
+    name: 'welcome'
+    Label:
+        text: 'Ekran powitalny'
+        font_size: 50
+
+<ActiveTasksScreen>:
+    name: 'first'
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            text: 'Zadania do zrobienia'
+            font_size: 50
+        FloatLayout:
+            ReturnButton
+
+<ShoppingListScreen>:
+    name: 'second'
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            text: 'Lista zakupów'
+            font_size: 50
+        FloatLayout:
+            ReturnButton
