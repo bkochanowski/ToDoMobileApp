@@ -2,7 +2,7 @@
 #:import sp kivy.metrics.sp
 #:import dp kivy.metrics.dp
 
-<ActiveTasks>:
+<MainScreen>:
     orientation: 'vertical'
 
     canvas.before:
@@ -11,7 +11,7 @@
         Rectangle:
             pos: self.pos
             size: self.size
-            # source: 'data/background.png'
+
 
     SomeMenu_ActionBar:
         id: ActionBar
@@ -30,6 +30,32 @@
     pos_hint: {"x": .02, "y": .02}
     size_hint: 0.2, 0.2
     on_release: app.root.ids.sm.current = 'welcome'
+
+<FloatButton@FloatLayout>
+    id: float_root
+    size_hint: (None, None)
+    text: ('[b]+[/b]')
+
+    btn_size: (70,70)
+    size: (60,60)
+    bg_color:  0, .25, 0, 1
+    pos_hint: {"x": .65, 'y': 0.1}
+    Button:
+        text: float_root.text
+        font_size: 0.6 * self.height
+        markup: True
+        size_hint: (None, None)
+        size: float_root.btn_size
+        pos_hint: {"x": .8, "y": .1}
+        background_normal: ''
+        background_color: (0,0,0,0)
+        canvas.before:
+            Color:
+                rgba: float_root.bg_color
+            Ellipse:
+                size: self.size
+                pos: self.pos
+
 
 <SomeMenu_ActionBar@ActionBar>:
     background_color: 0, .7, 0, .7
@@ -73,8 +99,10 @@
     Label:
         text: 'Ekran powitalny'
         font_size: 50
+    FloatButton:
 
-<ActiveTasksScreen>:
+
+<ActiveTasksScreen@MainScreen>:
     name: 'first'
     BoxLayout:
         orientation: 'vertical'
@@ -83,8 +111,9 @@
             font_size: 50
         FloatLayout:
             ReturnButton
+    FloatButton:
 
-<ShoppingListScreen>:
+<ShoppingListScreen@MainScreen>:
     name: 'second'
     BoxLayout:
         orientation: 'vertical'
@@ -93,3 +122,4 @@
             font_size: 50
         FloatLayout:
             ReturnButton
+    FloatButton:
