@@ -1,10 +1,7 @@
 # kivy 2.0.0.
-#:import sp kivy.metrics.sp
-#:import dp kivy.metrics.dp
 
 <MainScreen>:
     orientation: 'vertical'
-
     canvas.before:
         Color:
             rgb: .6, .6, .6
@@ -12,24 +9,52 @@
             pos: self.pos
             size: self.size
 
-
-    SomeMenu_ActionBar:
+    MainMenu_ActionBar:
         id: ActionBar
 
-    ScreenManager:
-        id: sm
-        WelcomeScreen:
-        ActiveTasksScreen:
-        ShoppingListScreen:
+    Carousel:
+        direction: "right"
 
-<ReturnButton@Button>
-    text: ' Wróć \n do menu'
-    pos_hint: center
-    font_size: 20
-    background_color: 0, .2, 0, 1
-    pos_hint: {"x": .02, "y": .02}
-    size_hint: 0.2, 0.2
-    on_release: app.root.ids.sm.current = 'welcome'
+        WelcomeScreen:
+            id: 'Welcome'
+
+        ActiveTasks:
+            id: 'Tasks'
+            FloatButton:
+
+        ShoppingList:
+            id: 'Shopping'
+            FloatButton:
+
+
+<MainMenu_ActionBar@ActionBar>:
+    pos_hint: {'left' :1}
+    background_color: 0, .7, 0, .7
+    ActionView:
+        id: ActionView
+
+        ActionPrevious:
+            title: 'To-Do App'
+            with_previous: False
+            width: len(self.title) * 10
+
+        ActionGroup:
+            id: App_ActionGroup
+            mode: 'spinner'
+            text: 'Menu'
+            ActionButton:
+                text: 'Main page'
+
+
+            ActionButton:
+                text: 'Tasks'
+
+            ActionButton:
+                text: 'Shopping\nlist'
+
+            ActionButton:
+                text: 'Quit'
+                on_press: app.get_running_app().stop()
 
 <FloatButton@FloatLayout>
     id: float_root
@@ -39,7 +64,7 @@
     btn_size: (70,70)
     size: (60,60)
     bg_color:  0, .25, 0, 1
-    pos_hint: {"x": .65, 'y': 0.1}
+    pos_hint: {"x": .65, 'y': 0.05}
     Button:
         text: float_root.text
         font_size: 0.6 * self.height
@@ -56,70 +81,22 @@
                 size: self.size
                 pos: self.pos
 
-
-<SomeMenu_ActionBar@ActionBar>:
-    background_color: 0, .7, 0, .7
-    ActionView:
-        id: ActionView
-
-        HiddenIcon_ActionPrevious:
-
-        ActionGroup:
-            id: App_ActionGroup
-            mode: 'spinner'
-            text: 'Menu'
-
-            ActionButton:
-                text: 'Navigation'
-                on_release: app.root.ids.sm.current = 'welcome'
-
-            ActionButton:
-                text: 'Active Tasks'
-                on_release: app.root.ids.sm.current = 'first'
-            ActionButton:
-                text: 'Shopping List'
-                on_release:  app.root.ids.sm.current = 'second'
-
-        ActionButton:
-            text: 'Quit'
-            on_press: app.get_running_app().stop()
-
-
-<HiddenIcon_ActionPrevious@ActionPrevious>:
-    title: 'To-Do App'   # app.title if app.title is not None else 'Action Previous'
-    with_previous: False
-    app_icon: ''
-#    app_icon_width: 0
-#    app_icon_height: 0
-#    size_hint_x: None
-    width: len(self.title) * 10
-
 <WelcomeScreen>:
-    name: 'welcome'
+    id: 'welcome'
     Label:
         text: 'Ekran powitalny'
         font_size: 50
-    FloatButton:
 
-
-<ActiveTasksScreen@MainScreen>:
-    name: 'first'
+<ActiveTasks>:
     BoxLayout:
         orientation: 'vertical'
         Label:
             text: 'Zadania do zrobienia'
             font_size: 50
-        FloatLayout:
-            ReturnButton
-    FloatButton:
 
-<ShoppingListScreen@MainScreen>:
-    name: 'second'
+<ShoppingList>:
     BoxLayout:
         orientation: 'vertical'
         Label:
-            text: 'Lista zakupów'
+            text: 'Zakupy do zrobienia'
             font_size: 50
-        FloatLayout:
-            ReturnButton
-    FloatButton:
