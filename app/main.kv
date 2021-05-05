@@ -1,0 +1,58 @@
+# kivy 2.0.0.
+#: import icon kivy.garden.iconfonts.icon
+#: import mtx kivy.metrics
+
+
+<MainWindow>:
+    orientation: 'vertical'
+    canvas.before:
+        Color:
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    ScreenManager
+		id: 'scrn_mngr'
+
+		Screen:
+			name: 'scrn_main'
+			BoxLayout:
+				orientation: 'vertical'
+				canvas.before:
+					Color:
+						rgba: 0, .3, 0, .7
+					Rectangle:
+						pos: self.pos
+						size: self.size
+				BoxLayout:
+				    padding: 15
+				    size_hint_y: .1
+                    MenuButton:
+                        text: icon('zmdi-menu')
+                        markup: True
+                        text_size: self.size
+                        valign: 'middle'
+                        font_size: mtx.sp(24)
+
+                BoxLayout:
+                    orientation: 'vertical'
+                    canvas.before:
+                        Color:
+                            rgba: 1,1,1,1
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+
+		Screen:
+			name: 'scrn_tasks'
+			BoxLayout:
+				orientation: 'vertical'
+
+		Screen:
+			name: 'scrn_shopping'
+			BoxLayout:
+				orientation: 'vertical'
+
+<MenuButton@Button>
+    background_normal: ''
+    background_color: 1,1,1,0
