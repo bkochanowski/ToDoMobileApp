@@ -33,15 +33,83 @@
                         text_size: self.size
                         valign: 'middle'
                         font_size: mtx.sp(24)
-
+                        on_release:
+                            print('Ive been pressed')
                 BoxLayout:
                     orientation: 'vertical'
                     canvas.before:
                         Color:
-                            rgba: 1,1,1,1
+                            rgba: 1,1,1,.6
                         Rectangle:
                             pos: self.pos
                             size: self.size
+                    BoxLayout:
+                        size_hint_y: .9
+                        orientation: 'vertical'
+                        BoxLayout:
+                            size_hint_y: .1
+                            padding: [10,0]
+                            Label:
+                                text: icon('zmdi-arrow-forward')
+                                color: 0,0,0,1
+                                markup: True
+                                font_size: mtx.sp(24)
+                                size_hint_x: .1
+                                size_hint_y: .5
+                            Widget:
+                                size_hint_x: .7
+                            Label:
+                                text: 'DZISIAJ'
+                                font_size: mtx.sp(14)
+                                bold: True
+                                size_hint_x: .3
+                                color: 0,0,0,1
+                                text_size: self.size
+                                halign: 'right'
+                        BoxLayout:
+                            size_hint_y: .7
+                            id: scroll_parent
+                            ScrollView:
+                                id: sv_today
+                                do_scroll: [True, False]
+                                scroll_type: ['content']
+                                size_hint_y: None
+                                height: self.parent.height
+                                effect_cls: 'ScrollEffect'
+                                GridLayout:
+                                    id: today_wrapper
+                                    rows: 1
+                                    padding: ['10dp', '10dp','10dp', '20dp']
+                                    spacing: mtx.dp(20)
+                                    size: self.minimum_size
+                                    size_hint: [None, None]
+
+# 3 random tasks below to test GridLayout display
+                                    Task:
+                                        name: 'Task001'
+                                        time: '23:02'
+                                        size_hint: [None,None]
+                                        size: [scroll_parent.width/1.5, scroll_parent.height-(.050*scroll_parent.height)]
+                                    Task:
+                                        name: 'Task002'
+                                        time: '12:22'
+                                        size_hint: [None,None]
+                                        size: [scroll_parent.width/1.5, scroll_parent.height-(.050*scroll_parent.height)]
+                                    Task:
+                                        name: 'Task003'
+                                        time: '7:15'
+                                        size_hint: [None,None]
+                                        size: [scroll_parent.width/1.5, scroll_parent.height-(.050*scroll_parent.height)]
+
+
+                    BoxLayout:
+                        size_hint_y: .1
+                        canvas.before:
+                            Color:
+                                rgba: 1,1,1,1
+                            Rectangle:
+                                pos: self.pos
+                                size: self.size
 
 		Screen:
 			name: 'scrn_tasks'
@@ -52,6 +120,37 @@
 			name: 'scrn_shopping'
 			BoxLayout:
 				orientation: 'vertical'
+
+<Task>
+    orientation: 'vertical'
+    canvas.before:
+        Color:
+            rgba: [0, .3, 0, .3]
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [20]
+    Label:
+        id: task_name
+        text: root.name
+        size_hint_y: .5
+        color: 1,1,1,1
+    Label:
+        id: task_time
+        text: root.time
+        size_hint_y: .1
+        color: 1,1,1,1
+
+    AnchorLayout:
+        anchor_x: 'right'
+        anchor_y: 'top'
+        size_hint_y: .4
+        MenuButton:
+            text: icon('zmdi-delete')
+            markup: True
+            font_size: '24sp'
+            size_hint_x: .3
+            color: 1,1,1,1
 
 <MenuButton@Button>
     background_normal: ''
