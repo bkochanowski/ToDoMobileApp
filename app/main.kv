@@ -1,7 +1,7 @@
 # kivy 2.0.0.
 #: import icon kivy.garden.iconfonts.icon
 #: import mtx kivy.metrics
-
+#: import DatePicker datepicker.datepicker.DatePicker
 
 <MainWindow>:
     orientation: 'vertical'
@@ -13,7 +13,6 @@
 
     ScreenManager
 		id: 'scrn_mngr'
-
 		Screen:
 			name: 'scrn_main'
 			BoxLayout:
@@ -34,17 +33,17 @@
                         valign: 'middle'
                         font_size: mtx.sp(24)
                         on_release:
-                            print('Ive been pressed')
+                            print("I've been pressed")
                 BoxLayout:
                     orientation: 'vertical'
                     canvas.before:
                         Color:
-                            rgba: 1,1,1,.6
+                            rgba: 1,1,1,1
                         Rectangle:
                             pos: self.pos
                             size: self.size
                     BoxLayout:
-                        size_hint_y: .9
+                        size_hint_y: .85
                         orientation: 'vertical'
                         BoxLayout:
                             size_hint_y: .1
@@ -55,17 +54,18 @@
                                 markup: True
                                 font_size: mtx.sp(24)
                                 size_hint_x: .1
-                                size_hint_y: .5
+                                valign: 'top'
                             Widget:
-                                size_hint_x: .7
+                                size_hint_x: .4
                             Label:
-                                text: 'DZISIAJ'
+                                text: 'NADCHODZĄCE'
                                 font_size: mtx.sp(14)
                                 bold: True
-                                size_hint_x: .3
+                                size_hint_x: .5
                                 color: 0,0,0,1
                                 text_size: self.size
                                 halign: 'right'
+                                valign: 'center'
                         BoxLayout:
                             size_hint_y: .7
                             id: scroll_parent
@@ -84,7 +84,7 @@
                                     size: self.minimum_size
                                     size_hint: [None, None]
 
-# 3 random tasks below to test GridLayout display
+									# 3 random tasks below to test GridLayout display
                                     Task:
                                         name: 'Task001'
                                         time: '23:02'
@@ -96,17 +96,15 @@
                                         size_hint: [None,None]
                                         size: [scroll_parent.width/1.5, scroll_parent.height-(.050*scroll_parent.height)]
                                     Task:
-                                        name: 'Task003'
-                                        time: '7:15'
-                                        size_hint: [None,None]
+                                        name: 'Add_New'
+										on_release: root.add_new()
+										size_hint: [None,None]
                                         size: [scroll_parent.width/1.5, scroll_parent.height-(.050*scroll_parent.height)]
-
-
-                    BoxLayout:
+					BoxLayout:
                         size_hint_y: .1
                         canvas.before:
                             Color:
-                                rgba: 1,1,1,1
+                                rgba: 0,.3,0,.7
                             Rectangle:
                                 pos: self.pos
                                 size: self.size
@@ -121,11 +119,58 @@
 			BoxLayout:
 				orientation: 'vertical'
 
-<Task>
+<NewTask>:
+	BoxLayout:
+		orientation: 'vertical'
+		spacing: '12dp'
+		padding: '10dp'
+		canvas.before:
+			Color:
+				rgba: 1,1,1,1
+			RoundedRectangle:
+				pos: self.pos
+				size: self.size
+				radius: [5]
+		BoxLayout:
+			size_hint_y: .07
+			padding: '4dp'
+			FlatInput:
+				id: task_name
+				hint_text: 'task name'
+				hint_text_color: 1,1,1,1
+		Widget:
+			size_hint_y: .16
+		BoxLayout:
+			id: datetime
+			size_hint_y: .07
+			padding: '4dp'
+			DatePicker:
+				id: task_date
+				size_hint_x: .7
+			MenuButton:
+				id: task_time
+				text: '00:00'
+				size_hint_x: .3
+				on_release: root.get_time()
+		Widget:
+			size_hint_y: .6
+		MenuButton:
+			text: 'Zapisz'
+			size_hint_y: .1
+			canvas.before:
+				Color:
+					rgba: 0,.3,0,.3
+				RoundedRectangle:
+					pos: self.pos
+					size: self.size
+
+
+<Task>:
     orientation: 'vertical'
+	padding: mtx.dp(15)
     canvas.before:
         Color:
-            rgba: [0, .3, 0, .3]
+            rgba: [0, .2, 0, .3]
         RoundedRectangle:
             pos: self.pos
             size: self.size
@@ -133,18 +178,36 @@
     Label:
         id: task_name
         text: root.name
-        size_hint_y: .5
-        color: 1,1,1,1
-    Label:
-        id: task_time
-        text: root.time
-        size_hint_y: .1
-        color: 1,1,1,1
+		bold: True
+		font_size: mtx.sp(15)
+        size_hint_y: .15
+        color: 0,0,0,1
+		text_size: None, self.texture_size[1]
+		size: self.size
+		shorten: True
+		shorten_from: 'right'
+		halign: 'right'
+	BoxLayout:
+		size_hint_y: .1
+		Label:
+			text: icon('zmdi-time-countdown')
+			markup: True
+			size_hint_y: .4
+			color: 1,1,1,1
+			halign: 'left'
+		Label:
+			id: task_time
+			text: root.time
+			size_hint_y: .6
+			text_size: self.size
+			color: 1,1,1,1
+	BoxLayout:
+		size_hint_y: .6
 
     AnchorLayout:
         anchor_x: 'right'
-        anchor_y: 'top'
-        size_hint_y: .4
+        anchor_y: 'bottom'
+        size_hint_y: .1
         MenuButton:
             text: icon('zmdi-delete')
             markup: True
@@ -152,6 +215,17 @@
             size_hint_x: .3
             color: 1,1,1,1
 
-<MenuButton@Button>
+<MenuButton@Button>:
     background_normal: ''
     background_color: 1,1,1,0
+
+<FlatInput@TextInput>:
+	background_active: ''
+	background_normal: ''
+	background_color: 1,1,1,0
+	canvas.before:
+		Color:
+			rgba: [0,.3,0,.7]
+		RoundedRectangle:
+			pos: self.pos
+			size: [self.size[1], 0]
