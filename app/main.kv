@@ -67,7 +67,7 @@
                                 halign: 'right'
                                 valign: 'center'
                         BoxLayout:
-                            size_hint_y: .7
+                            size_hint_y: .6
                             id: scroll_parent
                             ScrollView:
                                 id: sv_today
@@ -100,11 +100,13 @@
 										on_release: root.add_new()
 										size_hint: [None,None]
                                         size: [scroll_parent.width/1.5, scroll_parent.height-(.050*scroll_parent.height)]
+					Widget:
+					    size_hint_y: .1
 					BoxLayout:
                         size_hint_y: .1
                         canvas.before:
                             Color:
-                                rgba: 0,.3,0,.7
+                                rgba: 0, .25, 0, .75
                             Rectangle:
                                 pos: self.pos
                                 size: self.size
@@ -120,6 +122,7 @@
 				orientation: 'vertical'
 
 <NewTask>:
+	size_hint: [.8,.7]
 	BoxLayout:
 		orientation: 'vertical'
 		spacing: '12dp'
@@ -130,36 +133,46 @@
 			RoundedRectangle:
 				pos: self.pos
 				size: self.size
-				radius: [5]
+				radius: [7]
 		BoxLayout:
-			size_hint_y: .07
+			size_hint_y: .15
 			padding: '4dp'
 			FlatInput:
 				id: task_name
-				hint_text: 'task name'
+				hint_text: 'Wpisz nazwę zadania'
 				hint_text_color: 1,1,1,1
 		Widget:
 			size_hint_y: .16
 		BoxLayout:
 			id: datetime
-			size_hint_y: .07
+			size_hint_y: .2
 			padding: '4dp'
 			DatePicker:
 				id: task_date
 				size_hint_x: .7
+				background_active: ''
+				background_normal: ''
+				background_color: 1,1,1,0
+				canvas.before:
+					Color:
+						rgba: [0,.3,0,.7]
+					Rectangle:
+						pos: self.pos
+						size: [self.size[0], 1]
 			MenuButton:
 				id: task_time
-				text: '00:00'
+				text: '00:00:00'
+				color: 0,.3,0,.7
 				size_hint_x: .3
 				on_release: root.get_time()
 		Widget:
-			size_hint_y: .6
+			size_hint_y: .25
 		MenuButton:
 			text: 'Zapisz'
-			size_hint_y: .1
+			size_hint_y: .24
 			canvas.before:
 				Color:
-					rgba: 0,.3,0,.3
+					rgba: 0,.3,0,.7
 				RoundedRectangle:
 					pos: self.pos
 					size: self.size
@@ -170,7 +183,7 @@
 	padding: mtx.dp(15)
     canvas.before:
         Color:
-            rgba: [0, .2, 0, .3]
+            rgba: [0, 0, 0, .25]
         RoundedRectangle:
             pos: self.pos
             size: self.size
@@ -192,15 +205,18 @@
 		Label:
 			text: icon('zmdi-time-countdown')
 			markup: True
-			size_hint_y: .4
-			color: 1,1,1,1
+			size_hint_y: .5
+			size_hint_x: .15
+			color: 0,0,0,.8
 			halign: 'left'
 		Label:
 			id: task_time
 			text: root.time
 			size_hint_y: .6
 			text_size: self.size
-			color: 1,1,1,1
+			color: 0,0,0,.8
+			halign: 'left'
+
 	BoxLayout:
 		size_hint_y: .6
 
@@ -213,7 +229,16 @@
             markup: True
             font_size: '24sp'
             size_hint_x: .3
-            color: 1,1,1,1
+            color: 0,0,0,1
+            canvas.before:
+                Color:
+                    rgba: 0,0,0,1
+                Line:
+                    width: .55
+                    rectangle: (self.x)+5, self.y, (self.width)-11, self.height
+
+
+
 
 <MenuButton@Button>:
     background_normal: ''
@@ -226,6 +251,6 @@
 	canvas.before:
 		Color:
 			rgba: [0,.3,0,.7]
-		RoundedRectangle:
+		Rectangle:
 			pos: self.pos
-			size: [self.size[1], 0]
+			size: [self.size[0], 1]
