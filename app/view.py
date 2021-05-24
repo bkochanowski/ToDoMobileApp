@@ -29,7 +29,6 @@ class NewTask(ModalView):
         box.add_widget(submit)
         mv.open()
 
-
     def set_time(self, inst, value):
         print(value)
 
@@ -38,10 +37,25 @@ class NewTask(ModalView):
         self.ids.task_time.text = str(time)
 
 
+class NewButton(ButtonBehavior, BoxLayout):
+    pass
+
+
 class Task(ButtonBehavior, BoxLayout):
     """this class represent each new task added by the user"""
     name = StringProperty('')
+    details = StringProperty('')
     time = StringProperty('')
+    date = StringProperty('')
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+
+class ItemToBuy(ButtonBehavior, BoxLayout):
+    """this class represent each new task added by the user"""
+    item_name = StringProperty('')
+    quantity = NumericProperty('')
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -54,3 +68,28 @@ class MainWindow(BoxLayout):
     def add_new(self):
         nt = NewTask()
         nt.open()
+
+    def add_task(self, mv, xtask: tuple):
+        error = False
+        scroll_parent = self.ids.scroll_parent
+        tw = self.ids.today_wrapper
+        for t in xtask:
+            if len(t.text) < 3:
+                t.hint_text = '**Pole wymagane**'
+                t.hint_text_color = [1, 0, 0, 1]
+                error = True
+
+        if error:
+            pass
+        else:
+            task = Task()
+            task.name = xtask[0].text
+            task.details = xtask[1].text
+            task.time = xtask[2].text
+            task.date = xtask[3].text
+            task.size_hint = [None, None]
+            task.size = [scroll_parent.width / 1.5, scroll_parent.height -
+                         (.050 * scroll_parent.height)]
+
+            tw.add_widget(task)
+            mv.dismiss()
