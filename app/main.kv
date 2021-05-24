@@ -84,19 +84,15 @@
                                     size: self.minimum_size
                                     size_hint: [None, None]
 
-									# 3 random tasks below to test GridLayout display
+									# 1 random task below to test GridLayout display
                                     Task:
                                         name: 'Task001'
+                                        details: 'something bla bla'
                                         time: '23:02'
                                         size_hint: [None,None]
                                         size: [scroll_parent.width/1.5, scroll_parent.height-(.050*scroll_parent.height)]
-                                    Task:
-                                        name: 'Task002'
-                                        time: '12:22'
-                                        size_hint: [None,None]
-                                        size: [scroll_parent.width/1.5, scroll_parent.height-(.050*scroll_parent.height)]
-                                    Task:
-                                        name: 'Add_New'
+
+                                    NewButton:
 										on_release: root.add_new()
 										size_hint: [None,None]
                                         size: [scroll_parent.width/1.5, scroll_parent.height-(.050*scroll_parent.height)]
@@ -141,35 +137,44 @@
 				id: task_name
 				hint_text: 'Wpisz nazwę zadania'
 				hint_text_color: 1,1,1,1
+		BoxLayout:
+            size_hint_y: .25
+            padding: '4dp'
+            FlatInput:
+                id: task_details
+                hint_text: 'Wpisz szczegóły zadania'
+                hint_text_color: 1,1,1,1
 		Widget:
-			size_hint_y: .16
+			size_hint_y: .1
 		BoxLayout:
 			id: datetime
-			size_hint_y: .2
+			size_hint_y: .1
 			padding: '4dp'
 			DatePicker:
 				id: task_date
-				size_hint_x: .7
-				background_active: ''
-				background_normal: ''
-				background_color: 1,1,1,0
-				canvas.before:
-					Color:
-						rgba: [0,.3,0,.7]
-					Rectangle:
-						pos: self.pos
-						size: [self.size[0], 1]
+				size_hint_x: .5
+#				background_active: ''
+#				background_normal: ''
+#				background_color: 1,1,1,0
+#				canvas.before:
+#					Color:
+#						rgba: [0,.3,0,.7]
+#					Rectangle:
+#						pos: self.pos
+#						size: [self.size[0], 1]
 			MenuButton:
 				id: task_time
 				text: '00:00:00'
-				color: 0,.3,0,.7
-				size_hint_x: .3
+				color: 0,0,0,1
+				size_hint_x: .5
 				on_release: root.get_time()
 		Widget:
-			size_hint_y: .25
+			size_hint_y: .2
 		MenuButton:
 			text: 'Zapisz'
-			size_hint_y: .24
+			bold: True
+			size_hint_y: .2
+			on_release: app.root.add_task(root, (task_name, task_details, task_date, task_time))
 			canvas.before:
 				Color:
 					rgba: 0,.3,0,.7
@@ -183,7 +188,7 @@
 	padding: mtx.dp(15)
     canvas.before:
         Color:
-            rgba: [0, 0, 0, .25]
+            rgba: [0, 0, .5, .35]
         RoundedRectangle:
             pos: self.pos
             size: self.size
@@ -192,8 +197,8 @@
         id: task_name
         text: root.name
 		bold: True
-		font_size: mtx.sp(15)
-        size_hint_y: .15
+		font_size: mtx.sp(20)
+        size_hint_y: .1
         color: 0,0,0,1
 		text_size: None, self.texture_size[1]
 		size: self.size
@@ -201,25 +206,35 @@
 		shorten_from: 'right'
 		halign: 'right'
 	BoxLayout:
-		size_hint_y: .1
+		size_hint_y: .07
 		Label:
 			text: icon('zmdi-time-countdown')
 			markup: True
-			size_hint_y: .5
+			size_hint_y: .8
 			size_hint_x: .15
-			color: 0,0,0,.8
+			color: 1,1,1,.9
 			halign: 'left'
 		Label:
 			id: task_time
 			text: root.time
-			size_hint_y: .6
+			size_hint_y: .80
 			text_size: self.size
-			color: 0,0,0,.8
+			color: 1,1,1,.9
 			halign: 'left'
-
-	BoxLayout:
-		size_hint_y: .6
-
+	Label:
+		size_hint_y: .38
+        id: task_details
+        text: root.details
+        multiline: True
+        font_size: mtx.sp(12)
+        color: 0,0,0,1
+        text_size: None, self.texture_size[1]
+        size: self.size
+        halign: 'right'
+        shorten: True
+        shorten_from: 'right'
+    BoxLayout:
+    	size_hint_y: .3
     AnchorLayout:
         anchor_x: 'right'
         anchor_y: 'bottom'
@@ -229,16 +244,22 @@
             markup: True
             font_size: '24sp'
             size_hint_x: .3
-            color: 0,0,0,1
-            canvas.before:
-                Color:
-                    rgba: 0,0,0,1
-                Line:
-                    width: .55
-                    rectangle: (self.x)+5, self.y, (self.width)-11, self.height
+            color: 1,1,1,1
+			on_release: root.parent.remove_widget(root)
 
 
-
+<NewButton>:
+	canvas.before:
+		Color:
+			rgba: [0, 0, 0, .15]
+		RoundedRectangle:
+			pos: self.pos
+			size: self.size
+			radius: [20]
+	Label:
+		text: icon('zmdi-plus')
+		font_size: mtx.sp(58)
+		markup: True
 
 <MenuButton@Button>:
     background_normal: ''
@@ -250,7 +271,7 @@
 	background_color: 1,1,1,0
 	canvas.before:
 		Color:
-			rgba: [0,.3,0,.7]
+			rgba: [0,0,0,1]
 		Rectangle:
 			pos: self.pos
-			size: [self.size[0], 1]
+			size: [self.size[0], 2]
