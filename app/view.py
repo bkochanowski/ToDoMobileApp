@@ -2,13 +2,14 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.button import Button
 from kivy.uix.modalview import ModalView
+from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.clock import Clock
 from kivy.garden.circulardatetimepicker import CircularTimePicker as CTP
 
-from kivy.properties import StringProperty, NumericProperty
+from kivy.properties import ObjectProperty, StringProperty, NumericProperty
 
 from kivy.metrics import sp, dp
 from kivy.utils import rgba
-
 
 class NewTask(ModalView):
     def __init__(self, **kwargs):
@@ -62,8 +63,12 @@ class ItemToBuy(ButtonBehavior, BoxLayout):
 
 
 class MainWindow(BoxLayout):
+    pass
+
+
+class TaskScreen(Screen):
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+        super(TaskScreen, self).__init__(**kwargs)
 
     def add_new(self):
         nt = NewTask()
@@ -72,7 +77,7 @@ class MainWindow(BoxLayout):
     def add_task(self, mv, xtask: tuple):
         error = False
         scroll_parent = self.ids.scroll_parent
-        tw = self.ids.today_wrapper
+        uw = self.ids.upcoming_wrapper
         for t in xtask:
             if len(t.text) < 3:
                 t.hint_text = '**Pole wymagane**'
@@ -91,5 +96,9 @@ class MainWindow(BoxLayout):
             task.size = [scroll_parent.width / 1.5, scroll_parent.height -
                          (.050 * scroll_parent.height)]
 
-            tw.add_widget(task)
+            uw.add_widget(task)
             mv.dismiss()
+
+
+class ShoppingScreen(Screen):
+    pass
