@@ -1,54 +1,60 @@
 # kivy 2.0.0.
 #: import icon kivy.garden.iconfonts.icon
+#: import NavigationDrawer kivy.garden.navigationdrawer.NavigationDrawer
 #: import mtx kivy.metrics
 #: import DatePicker datepicker.datepicker.DatePicker
 
 <MainWindow>:
-    BoxLayout:
-        orientation: "vertical"
+    NavigationDrawer
+        id: nav
+        anim_type: 'slide_above_simple'
         BoxLayout:
-            size_hint: 1, None
-            size_hint_y: .1
-			canvas.before:
-				Color:
-					rgba: 0, .45,0,.8
-				Rectangle:
-					pos: self.pos
-					size: self.size
-			BoxLayout:
-				padding: 15,5,5,5
-				MenuButton:
-					text: icon('zmdi-menu')
-					markup: True
-					text_size: self.size
-					font_size: mtx.sp(24)
-					valign: 'middle'
-					on_release:
-						print("I've been pressed")
-				BoxLayout:
-				    halign: 'right'
-                    Button:
-                        text: 'Zadania'
-                        on_release: scrn_mngr.current = 'shop_scrn'
-                    Button:
-                        text: 'Zakupy'
-                        on_release: scrn_mngr.current = 'shop_scrn'
+            id: sidenav
         BoxLayout:
-            size_hint_y: .82
-            ScreenManager:
-                id: scrn_mngr
-                TaskScreen:
-                ShoppingScreen:
-        MenuButton:
-            size_hint_y: .08
-            canvas.before:
-    		    Color:
-    				rgba: 0, .45,0,.8
-    			Rectangle:
-    				pos: self.pos
-    				size: self.size
+            orientation: "vertical"
+            BoxLayout:
+                size_hint: 1, None
+                size_hint_y: .1
+                canvas.before:
+                    Color:
+                        rgba: 0, .45,0,.8
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                BoxLayout:
+                    padding: 15,5,5,5
+                    MenuButton:
+                        text: icon('zmdi-menu')
+                        markup: True
+                        text_size: self.size
+                        font_size: mtx.sp(24)
+                        valign: 'middle'
+                        on_release: nav.toggle_state()
+                    BoxLayout:
+                        halign: 'right'
+                        Button:
+                            text: 'Zadania'
+                            on_release: scrn_mngr.current = 'task_scrn'
+                        Button:
+                            text: 'Zakupy'
+                            on_release: scrn_mngr.current = 'shop_scrn'
+            BoxLayout:
+                size_hint_y: .82
+                ScreenManager:
+                    id: scrn_mngr
+                    TaskScreen:
+                    ShoppingScreen:
+            MenuButton:
+                size_hint_y: .08
+                canvas.before:
+                    Color:
+                        rgba: 0, .45,0,.8
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
 
 <TaskScreen>
+    id: task_scrn
     name: 'task_scrn'
 	BoxLayout:
 		orientation: 'vertical'
@@ -91,7 +97,7 @@
 					scroll_type: ['content']
 					size_hint_y: None
 					height: self.parent.height
-					effect_cls: 'ScrollEffect'
+					effect_cls: 'OpacityScrollEffect'
 					GridLayout:
 						id: upcoming_wrapper
 						rows: 1
@@ -192,7 +198,7 @@
 			bold: True
 			size_hint_y: .2
 # path below needs to be updated!!! wrong path!
-			on_release: app.root.add_task(root, (task_name, task_details, task_date, task_time))
+			on_release: app.root.add_one.add_task(root, (task_name, task_details, task_date, task_time))
 			canvas.before:
 				Color:
 					rgba: 0,.3,0,.7
@@ -289,7 +295,7 @@
 	background_color: 1,1,1,0
 	canvas.before:
 		Color:
-			rgba: [0,0,0,1]
+			rgba: [0,0,0,.7]
 		Rectangle:
 			pos: self.pos
 			size: [self.size[0], 2]

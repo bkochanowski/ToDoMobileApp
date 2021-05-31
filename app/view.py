@@ -11,6 +11,7 @@ from kivy.properties import ObjectProperty, StringProperty, NumericProperty
 from kivy.metrics import sp, dp
 from kivy.utils import rgba
 
+
 class NewTask(ModalView):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -63,7 +64,14 @@ class ItemToBuy(ButtonBehavior, BoxLayout):
 
 
 class MainWindow(BoxLayout):
-    pass
+    add_one = ObjectProperty(None)
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.add_one = TaskScreen()
+
+    # def update_widgets(self):
+    #     self.task = str(self.add_one.add_task())
 
 
 class TaskScreen(Screen):
@@ -85,7 +93,7 @@ class TaskScreen(Screen):
                 error = True
 
         if error:
-            pass
+            print('za krótka informacja o zadaniu')
         else:
             task = Task()
             task.name = xtask[0].text
