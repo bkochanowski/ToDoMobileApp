@@ -5,140 +5,203 @@
 #: import DatePicker datepicker.datepicker.DatePicker
 
 <MainWindow>:
+    canvas.before:
+        Color:
+            rgba: 1,1,1,1
+        Rectangle:
+            pos: self.pos
+            size: self.size
     NavigationDrawer
         id: nav
         anim_type: 'slide_above_simple'
+        side_panel_width: .5*self.width
         BoxLayout:
             id: sidenav
-        BoxLayout:
-            orientation: "vertical"
+            orientation: 'vertical'
+            padding: mtx.dp(5)
+            canvas.before:
+                Color:
+                    rgba: 1,1,1,1
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
             BoxLayout:
-                size_hint: 1, None
+                id: menu_bar
                 size_hint_y: .1
                 canvas.before:
                     Color:
-                        rgba: 0, .45,0,.8
+                        rgba: 0, .4,0,.8
                     Rectangle:
                         pos: self.pos
                         size: self.size
-                BoxLayout:
-                    padding: 15,5,5,5
-                    MenuButton:
-                        text: icon('zmdi-menu')
-                        markup: True
-                        text_size: self.size
-                        font_size: mtx.sp(24)
-                        valign: 'middle'
-                        on_release: nav.toggle_state()
-                    BoxLayout:
-                        halign: 'right'
-                        Button:
-                            text: 'Zadania'
-                            on_release: scrn_mngr.current = 'task_scrn'
-                        Button:
-                            text: 'Zakupy'
-                            on_release: scrn_mngr.current = 'shop_scrn'
+                MenuButton:
+                    text: icon('zmdi-apps')
+                    markup: True
+                    text_size: self.size
+                    color: 1,1,1,1
+                    text_size: self.size
+                    font_size: mtx.sp(24)
+                    valign: 'middle'
+                    halign: 'center'
+                    on_press:
+                        nav.toggle_state()
+
+            ListEntry:
+                text: '%s Dodaj zadanie'%icon('zmdi-edit')
+                markup: True
+                color: 0,0,.7,1
+                size_hint_y: .1
+                on_release:
+                    nav.toggle_state()
+                    app.root.add_new()
+            Widget:
+                size_hint_y: .8
+        BoxLayout:
+            orientation: 'vertical'
             BoxLayout:
-                size_hint_y: .82
-                ScreenManager:
-                    id: scrn_mngr
-                    TaskScreen:
-                    ShoppingScreen:
-            MenuButton:
-                size_hint_y: .08
-                canvas.before:
-                    Color:
-                        rgba: 0, .45,0,.8
-                    Rectangle:
-                        pos: self.pos
-                        size: self.size
+                id: menu_bar
+            	size_hint_y: .1
+            	canvas.before:
+            		Color:
+            			rgba: 0, .45,0,.8
+            		Rectangle:
+            			pos: self.pos
+            			size: self.size
+                padding: 15,5,5,5
+                MenuButton:
+                    text: icon('zmdi-menu')
+                    markup: True
+                    text_size: self.size
+                    font_size: mtx.sp(24)
+                    valign: 'middle'
+                    on_release: nav.toggle_state()
+                BoxLayout:
+                    halign: 'right'
+                    Button:
+                        text: 'Zadania'
+                        on_release: root.ids.scrn_mngr.current = 'task_scrn'
+                    Button:
+                        text: 'Zakupy'
+                        on_release: root.ids.scrn_mngr.current = 'shop_scrn'
 
-<TaskScreen>
-    id: task_scrn
-    name: 'task_scrn'
-	BoxLayout:
-		orientation: 'vertical'
-		canvas.before:
-			Color:
-				rgba: 1,1,1,1
-			Rectangle:
-				pos: self.pos
-				size: self.size
-		BoxLayout:
-			size_hint_y: .85
-			orientation: 'vertical'
-			BoxLayout:
-				size_hint_y: .1
-				padding: [10,0]
-				Label:
-					text: icon('zmdi-arrow-forward')
-					color: 0,0,0,1
-					markup: True
-					font_size: mtx.sp(24)
-					size_hint_x: .1
-					valign: 'top'
-				Widget:
-					size_hint_x: .4
-				Label:
-					text: 'NADCHODZĄCE'
-					font_size: mtx.sp(14)
-					bold: True
-					size_hint_x: .5
-					color: 0,0,0,1
-					text_size: self.size
-					halign: 'right'
-					valign: 'center'
-			BoxLayout:
-				size_hint_y: .6
-				id: scroll_parent
-				ScrollView:
-					id: sv_upcoming
-					do_scroll: [True, False]
-					scroll_type: ['content']
-					size_hint_y: None
-					height: self.parent.height
-					effect_cls: 'OpacityScrollEffect'
-					GridLayout:
-						id: upcoming_wrapper
-						rows: 1
-						padding: ['10dp', '10dp','10dp', '20dp']
-						spacing: mtx.dp(20)
-						size: self.minimum_size
-						size_hint: [None, None]
+            ScreenManager:
+                id: scrn_mngr
+                Screen:
+                    name: 'task_scrn'
+                    BoxLayout:
+                        orientation: 'vertical'
+                        canvas.before:
+                            Color:
+                                rgba: 1,1,1,1
+                            Rectangle:
+                                pos: self.pos
+                                size: self.size
+                        BoxLayout:
+                            size_hint_y: .9
+                            orientation: 'vertical'
+                            BoxLayout:
+                                size_hint_y: .1
+                                padding: [10,0]
+                                Label:
+                                    text: 'NADCHODZĄCE ZADANIA'
+                                    font_size: mtx.sp(14)
+                                    bold: True
+                                    size_hint_x: .5
+                                    color: 0,0,0,1
+                                    text_size: self.size
+                                    halign: 'left'
+                                    valign: 'center'
+                            BoxLayout:
+                                size_hint_y: .6
+                                id: scroll_parent
+                                ScrollView:
+                                    id: sv_upcoming
+                                    do_scroll: [True, False]
+                                    scroll_type: ['content']
+                                    size_hint_y: None
+                                    height: self.parent.height
+                                    effect_cls: 'OpacityScrollEffect'
+                                    GridLayout:
+                                        id: upcoming_wrapper
+                                        rows: 1
+                                        padding: ['10dp', '10dp','10dp', '20dp']
+                                        spacing: mtx.dp(20)
+                                        size: self.minimum_size
+                                        size_hint: [None, None]
 
-						# 1 random task below to test GridLayout display
-						Task:
-							name: 'Zadanie #1'
-							details: 'Zrób aplikację. \n Utwórz mechanizm listy zakupów.'
-							time: '22:02'
-							size_hint: [None,None]
-							size: [scroll_parent.width/1.5, scroll_parent.height-(.050*scroll_parent.height)]
-						Task:
-							name: 'Zadanie #2'
-							details: 'Przerzuć każdy screen do innego pliku kv.'
-							time: '20:02'
-							size_hint: [None,None]
-							size: [scroll_parent.width/1.5, scroll_parent.height-(.050*scroll_parent.height)]
+                                        # 1 random task below to test GridLayout display
+                                        Task:
+                                            name: 'Zadanie #1'
+                                            details: 'Zrób aplikację. \n Utwórz mechanizm listy zakupów.'
+                                            time: '22:02'
+                                            size_hint: [None,None]
+                                            size: [scroll_parent.width/1.5, scroll_parent.height-(.050*scroll_parent.height)]
+                                        Task:
+                                            name: 'Zadanie #2'
+                                            details: 'Przerzuć każdy screen do innego pliku kv.'
+                                            time: '20:02'
+                                            size_hint: [None,None]
+                                            size: [scroll_parent.width/1.5, scroll_parent.height-(.050*scroll_parent.height)]
+                                        NewButton:
+                                            on_release: app.root.add_new()
+                                            size_hint: [None,None]
+                                            size: [scroll_parent.width/1.5, scroll_parent.height-(.050*scroll_parent.height)]
+                        Widget:
+                            size_hint_y: .10
 
-						NewButton:
-							on_release: root.add_new()
-							size_hint: [None,None]
-							size: [scroll_parent.width/1.5, scroll_parent.height-(.050*scroll_parent.height)]
-		Widget:
-			size_hint_y: .05
+                Screen:
+                    name: 'shop_scrn'
+                    BoxLayout:
+                        orientation: 'vertical'
+                        canvas.before:
+                            Color:
+                                rgba: 1,1,1,1
+                            Rectangle:
+                                pos: self.pos
+                                size: self.size
+                        BoxLayout:
+                            orientation: 'vertical'
+                            BoxLayout:
+                                size_hint_y: .1
+                                padding: [10,0]
+                                Label:
+                                    text: 'LISTA ZAKUPÓW'
+                                    font_size: mtx.sp(14)
+                                    bold: True
+                                    size_hint_x: .5
+                                    color: 0,0,0,1
+                                    text_size: self.size
+                                    halign: 'left'
+                                    valign: 'center'
+                            BoxLayout:
+                                size_hint_y: .9
+                                ScrollView:
+                                    id: sv_shopping
+                                    size_hint_y: None
+                                    height: self.parent.height
+                                    GridLayout:
+                                        id: shopping
+                                        cols: 1
+                                        size_hint_y: None
+                                        size: self.minimum_size
+                                        padding: '10sp'
+                                        spacing: '10sp'
 
-
-<ShoppingScreen>:
-    name: 'shop_scrn'
-	orientation: 'vertical'
-    BoxLayout:
-		orientation: 'vertical'
-		canvas.before:
-			Color:
-				rgba: 0,0,1,1
-			Rectangle:
-				pos: self.pos
-				size: self.size
+                                        ItemToBuy:
+                                            item_name: 'Jajka'
+                                            size_hint: [1,None]
+                                            height: mtx.dp(50)
+                                        ItemToBuy:
+                                            item_name: 'Chleb'
+                                            size_hint: [1,None]
+                                            height: mtx.dp(50)
+                                        ItemToBuy:
+                                            item_name: 'Mleko'
+                                            size_hint: [1,None]
+                                            height: mtx.dp(50)
+                                        NewButton:
+                                            size_hint: [1,None]
+                                            height: mtx.dp(50)
 
 <NewTask>:
 	size_hint: [.8,.7]
@@ -197,8 +260,7 @@
 			text: 'Zapisz'
 			bold: True
 			size_hint_y: .2
-# path below needs to be updated!!! wrong path!
-			on_release: app.root.add_one.add_task(root, (task_name, task_details, task_date, task_time))
+			on_release: app.root.add_task(root, (task_name, task_details, task_date, task_time))
 			canvas.before:
 				Color:
 					rgba: 0,.3,0,.7
@@ -271,6 +333,49 @@
             color: 1,1,1,1
 			on_release: root.parent.remove_widget(root)
 
+#<ItemToBuy>:
+#	orientation: 'vertical'
+#	padding: mtx.dp(10)
+#    canvas.before:
+#        Color:
+#            rgba: [0, 0, .9, .9]
+#        RoundedRectangle:
+#            pos: self.pos
+#            size: self.size
+#            radius: [10]
+#	Label:
+#		id: item_name
+#		text: root.item_name
+#		bold: True
+#		font_size: mtx.sp(18)
+#		size_hint_y: .4
+#		color: 0,0,0,1
+#		text_size: None, self.texture_size[1]
+#		size: self.size
+#		shorten: True
+#		shorten_from: 'right'
+#	AnchorLayout:
+#			anchor_x: 'right'
+#			anchor_y: 'bottom'
+#			size_hint_y: .6
+#			MenuButton:
+#				text: icon('zmdi-delete')
+#				markup: True
+#				font_size: '24sp'
+#				size_hint_x: .3
+#				color: 1,1,1,1
+#				on_release: root.parent.remove_widget(root)
+
+
+<ListEntry@MenuButton>:
+	text_size: self.size
+	valign: 'middle'
+	canvas.before:
+		Color:
+			rgba: 0,0,.7,1
+		Rectangle:
+			pos: self.pos
+			size: [self.size[0], mtx.dp(1)]
 
 <NewButton>:
 	canvas.before:
