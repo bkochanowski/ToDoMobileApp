@@ -4,9 +4,8 @@ import os
 
 class Database(object):
     def __init__(self):
-        path = 'app/storage/'
-        # module ntpath has no attribute exist
-        if not os.path.exsist(os.path.join(self.path, 'db.sqlite')):
+        self.path = 'app/storage/'
+        if not os.path.exists(os.path.join(self.path, 'db.sqlite')):
             conn = sqlite3.connect(os.path.join(self.path, 'db.sqlite'))
             cur = conn.cursor()
 
@@ -22,7 +21,7 @@ class Database(object):
 
         return conn
 
-    def get_tasks(self, task):
+    def get_tasks(self):
         conn = self.db_connect()
         cur = conn.cursor()
 

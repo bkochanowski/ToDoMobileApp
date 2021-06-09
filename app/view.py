@@ -52,6 +52,7 @@ class Task(ButtonBehavior, BoxLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
+
 class ItemToBuy(ButtonBehavior, BoxLayout):
     """this class represent each new shopping item added by the user"""
     item_name = StringProperty('')
@@ -63,25 +64,26 @@ class ItemToBuy(ButtonBehavior, BoxLayout):
 class MainWindow(BoxLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-    #     self.db = Database()
-    #     self.init.view()
-    #
-    # def init_view(self):
-    #     all_tasks = self.db.get_tasks()
-    #     scroll_parent = self.ids.scroll_parent
-    #     uw = self.ids.upcoming_wrapper
-    #
-    #     for t in all_tasks:
-    #         task = Task()
-    #         task.name = t[0]
-    #         task.details = t[1]
-    #         date, time = t[3].split(' ', 1)
-    #         task.time = time
-    #         task.date = date
-    #         task.size_hint = [None, None]
-    #         task.size = [scroll_parent.width / 1.5, scroll_parent.height -
-    #                      (.050 * scroll_parent.height)]
-    #         uw.add_widget(task)
+
+        self.db = Database()
+        self.init_view()
+
+    def init_view(self):
+        all_tasks = self.db.get_tasks()
+        scroll_parent = self.ids.scroll_parent
+        uw = self.ids.upcoming_wrapper
+
+        for t in all_tasks:
+            task = Task()
+            task.name = t[1]
+            task.details = t[2]
+            date, time = t[3].split(' ', 1)
+            task.time = time
+            task.date = date
+            task.size_hint = [None, None]
+            task.size = [scroll_parent.width / 1.5, scroll_parent.height -
+                         (.50 * scroll_parent.height)]
+            uw.add_widget(task)
 
     def add_new(self):
         nt = NewTask()
@@ -108,19 +110,19 @@ class MainWindow(BoxLayout):
             task.size = [scroll_parent.width / 1.5, scroll_parent.height -
                          (.050 * scroll_parent.height)]
 
-            date = ''.join([xtask[3].text, xtask[2].text])
+            date = ' '.join([xtask[3].text, xtask[2].text])
             task_ = (xtask[0].text, xtask[1].text, date)
-            # if self.db.add_task(task_):
-            uw.add_widget(task)
+            if self.db.add_task(task_):
+                uw.add_widget(task)
             mv.dismiss()
 
-            # if len(uw.children) > 1:
-            #     for child in uw.children:
-            #         if type(child) == NewButton:
-            #             uw.remove_widget(child)
-            #             break
+            if len(uw.children) > 1:
+                for child in uw.children:
+                    if type(child) == NewButton:
+                        uw.remove_widget(child)
+                        break
 
-    # def delete_task(self, task: Task):
-    #     name = task.name
-    #     if self.db.delete_task(name):
-    #         task.parent.remove_widget(task)
+    def delete_task(self, task: Task):
+        name = task.name
+        if self.db.delete_task(name):
+            task.parent.remove_widget(task)
