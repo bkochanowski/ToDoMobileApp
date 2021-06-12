@@ -21,35 +21,42 @@
             padding: mtx.dp(5)
             canvas.before:
                 Color:
-                    rgba: 1,1,1,1
+                    rgba: 1,1,1,.2
                 Rectangle:
                     pos: self.pos
                     size: self.size
             BoxLayout:
                 id: menu_bar
-                size_hint_y: .1
+                size_hint_y: .07
                 canvas.before:
                     Color:
                         rgba: 0, .4,0,.8
                     Rectangle:
                         pos: self.pos
                         size: self.size
-                MenuButton:
-                    text: '%s zamknij'%icon('zmdi-apps')
-                    markup: True
-                    text_size: self.size
-                    color: 1,1,1,1
-                    text_size: self.size
-                    font_size: mtx.sp(24)
-                    valign: 'middle'
-                    halign: 'center'
-                    on_press:
-                        nav.toggle_state()
+                BoxLayout:
+                    orientation: 'horizontal'
+                    padding: [mtx.dp(15),0,mtx.dp(15),0]
+                    MenuButton:
+                        text: icon('zmdi-apps')
+                        size_hint_x: .2
+                        markup: True
+                        color: 1,1,1,1
+                        text_size: self.size
+                        font_size: mtx.sp(25)
+                        valign: 'middle'
+                        on_press:
+                            nav.toggle_state()
+                    MenuButton:
+                        text: 'zamknij'
+                        size_hint_x: .9
+                        on_press:
+                            nav.toggle_state()
 
             ListEntry:
                 text: '%s Dodaj zadanie'%icon('zmdi-edit')
                 markup: True
-                color: 0,0,.7,1
+                color: 1,1,1,1
                 size_hint_y: .1
                 on_release:
                     nav.toggle_state()
@@ -130,18 +137,18 @@
                                         size_hint: [None, None]
 
                                         # 1 random task below to test GridLayout display
-                                        Task:
-                                            name: 'Zadanie #1'
-                                            details: 'Zrób aplikację. \n Utwórz mechanizm listy zakupów.'
-                                            time: '22:02'
-                                            size_hint: [None,None]
-                                            size: [scroll_parent.width/1.5, scroll_parent.height-(.050*scroll_parent.height)]
-                                        Task:
-                                            name: 'Zadanie #2'
-                                            details: 'Przerzuć każdy screen do innego pliku kv.'
-                                            time: '20:02'
-                                            size_hint: [None,None]
-                                            size: [scroll_parent.width/1.5, scroll_parent.height-(.050*scroll_parent.height)]
+#                                        Task:
+#                                            name: 'Zadanie #1'
+#                                            details: 'Zrób aplikację. \n Utwórz mechanizm listy zakupów.'
+#                                            time: '22:02'
+#                                            size_hint: [None,None]
+#                                            size: [scroll_parent.width/1.5, scroll_parent.height-(.050*scroll_parent.height)]
+#                                        Task:
+#                                            name: 'Zadanie #2'
+#                                            details: 'Przerzuć każdy screen do innego pliku kv.'
+#                                            time: '20:02'
+#                                            size_hint: [None,None]
+#                                            size: [scroll_parent.width/1.5, scroll_parent.height-(.050*scroll_parent.height)]
                                         NewButton:
                                             on_release: app.root.add_new()
                                             size_hint: [None,None]
@@ -160,47 +167,36 @@
                                 pos: self.pos
                                 size: self.size
                         BoxLayout:
-                            orientation: 'vertical'
-                            BoxLayout:
-                                size_hint_y: .1
-                                padding: [10,0]
-                                Label:
-                                    text: 'LISTA ZAKUPÓW'
-                                    font_size: mtx.sp(14)
-                                    bold: True
-                                    size_hint_x: .5
-                                    color: 0,0,0,1
-                                    text_size: self.size
-                                    halign: 'left'
-                                    valign: 'center'
-                            BoxLayout:
-                                size_hint_y: .9
-                                ScrollView:
-                                    id: sv_shopping
+                            size_hint_y: .15
+                            padding: [10,0]
+                            Label:
+                                text: 'DO KUPIENIA'
+                                font_size: mtx.sp(14)
+                                bold: True
+                                size_hint_x: .5
+                                color: 0,0,0,1
+                                text_size: self.size
+                                halign: 'left'
+                                valign: 'center'
+                        BoxLayout:
+                            size_hint_y: .8
+                            ScrollView:
+                                id: sv_shopping
+                                size_hint_y: None
+                                height: self.parent.height
+                                GridLayout:
+                                    id: shopping
+                                    cols: 1
                                     size_hint_y: None
-                                    height: self.parent.height
-                                    GridLayout:
-                                        id: shopping
-                                        cols: 1
-                                        size_hint_y: None
-                                        size: self.minimum_size
-                                        padding: '10sp'
-                                        spacing: '10sp'
-                                        ItemToBuy:
-                                            item_name: 'Jajka'
-                                            size_hint: [1,None]
-                                            height: mtx.dp(50)
-                                        ItemToBuy:
-                                            item_name: 'Chleb'
-                                            size_hint: [1,None]
-                                            height: mtx.dp(50)
-                                        ItemToBuy:
-                                            item_name: 'Mleko'
-                                            size_hint: [1,None]
-                                            height: mtx.dp(50)
-                                        NewButton:
-                                            size_hint: [1,None]
-                                            height: mtx.dp(50)
+                                    size: self.minimum_size
+                                    padding: '10sp'
+                                    spacing: '10sp'
+                                    Widget
+                                    Widget
+                        CircleButton:
+                            id: cta
+                            text: '%s'%(icon('zmdi-plus',32))
+                            size_hint_y: .2
 
 <NewTask>:
 	size_hint: [.8,.7]
@@ -243,7 +239,7 @@
 #				background_color: 1,1,1,0
 #				canvas.before:
 #					Color:
-#						rgba: [0,.3,0,.7]
+#						rgba: [1,0,0,.7]
 #					Rectangle:
 #						pos: self.pos
 #						size: [self.size[0], 1]
@@ -330,40 +326,8 @@
             font_size: '24sp'
             size_hint_x: .3
             color: 1,1,1,1
-			on_release: root.parent.remove_widget(root)
+			on_release: app.root.delete_task(root)
 
-#<ItemToBuy>:
-#	orientation: 'vertical'
-#	padding: mtx.dp(10)
-#    canvas.before:
-#        Color:
-#            rgba: [0, 0, .9, .9]
-#        RoundedRectangle:
-#            pos: self.pos
-#            size: self.size
-#            radius: [10]
-#	Label:
-#		id: item_name
-#		text: root.item_name
-#		bold: True
-#		font_size: mtx.sp(18)
-#		size_hint_y: .4
-#		color: 0,0,0,1
-#		text_size: None, self.texture_size[1]
-#		size: self.size
-#		shorten: True
-#		shorten_from: 'right'
-#	AnchorLayout:
-#			anchor_x: 'right'
-#			anchor_y: 'bottom'
-#			size_hint_y: .6
-#			MenuButton:
-#				text: icon('zmdi-delete')
-#				markup: True
-#				font_size: '24sp'
-#				size_hint_x: .3
-#				color: 1,1,1,1
-#				on_release: root.parent.remove_widget(root)
 
 
 <ListEntry@MenuButton>:
@@ -371,12 +335,14 @@
 	valign: 'middle'
 	canvas.before:
 		Color:
-			rgba: 0,0,.7,1
+			rgba: 1,1,1,1
 		Rectangle:
 			pos: self.pos
 			size: [self.size[0], mtx.dp(1)]
 
+
 <NewButton>:
+    id: no_tasks
 	canvas.before:
 		Color:
 			rgba: [0, 0, 0, .15]
@@ -403,3 +369,25 @@
 		Rectangle:
 			pos: self.pos
 			size: [self.size[0], 2]
+
+<CircleButton@AnchorLayout>:
+	id: add_button
+	size_hint: (None, None)
+	text: ''
+	btn_size: (mtx.dp(60),mtx.dp(60))
+	size: (mtx.dp(60),mtx.dp(60))
+	btn_color: (0,0,.7,1)
+	pos_hint: {"x":.7,}
+	Button:
+		text: add_button.text
+		markup: True
+		size_hint: (None, None)
+		size: add_button.btn_size
+		background_normal: ''
+		background_color: (0,0,0,0)
+		canvas.before:
+			Color:
+				rgba: add_button.btn_color
+			Ellipse:
+				pos: self.pos
+				size: self.size
