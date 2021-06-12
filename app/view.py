@@ -2,6 +2,9 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.button import Button
 from kivy.uix.modalview import ModalView
+from kivy.core.window import Window
+from kivy.clock import Clock
+from kivy.animation import Animation
 
 from kivy.garden.circulardatetimepicker import CircularTimePicker as CTP
 
@@ -42,20 +45,12 @@ class NewButton(ButtonBehavior, BoxLayout):
     pass
 
 
-class Task(ButtonBehavior, BoxLayout):
+class Task(BoxLayout):
     """this class represent each new task added by the user"""
     name = StringProperty('')
     details = StringProperty('')
     time = StringProperty('')
     date = StringProperty('')
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-
-class ItemToBuy(ButtonBehavior, BoxLayout):
-    """this class represent each new shopping item added by the user"""
-    item_name = StringProperty('')
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -67,23 +62,32 @@ class MainWindow(BoxLayout):
 
         self.db = Database()
         self.init_view()
+        Clock.schedule_interval(self.pulsating_button, 5)
 
     def init_view(self):
         all_tasks = self.db.get_tasks()
-        scroll_parent = self.ids.scroll_parent
+        scroll_parent = Window
         uw = self.ids.upcoming_wrapper
 
         for t in all_tasks:
             task = Task()
             task.name = t[1]
             task.details = t[2]
-            date, time = t[3].split(' ', 1)
+            date, time = t[3].rsplit(' ', 1)
             task.time = time
             task.date = date
-            task.size_hint = [None, None]
-            task.size = [scroll_parent.width / 1.5, scroll_parent.height -
-                         (.50 * scroll_parent.height)]
+            task.size_hint = [None, 1]
+            task.size = [scroll_parent.width / 1.5, 45]
+
             uw.add_widget(task)
+
+    def pulsating_button(self, dtx):
+        before = dp(45)
+        after = dp(55)
+        anim = Animation(btn_size=(before, before), t='in_quad', duration=.5) + Animation(btn_size=(after, after),
+                                                                                          t='in_quad', duration=.5)
+        target = self.ids.cta
+        anim.start(target)
 
     def add_new(self):
         nt = NewTask()
@@ -93,6 +97,7 @@ class MainWindow(BoxLayout):
         error = False
         scroll_parent = self.ids.scroll_parent
         uw = self.ids.upcoming_wrapper
+
         for t in xtask:
             if len(t.text) < 3:
                 t.hint_text = '**Pole wymagane**'
@@ -108,7 +113,7 @@ class MainWindow(BoxLayout):
             task.date = xtask[3].text
             task.size_hint = [None, None]
             task.size = [scroll_parent.width / 1.5, scroll_parent.height -
-                         (.050 * scroll_parent.height)]
+                         (.05 * scroll_parent.height)]
 
             date = ' '.join([xtask[3].text, xtask[2].text])
             task_ = (xtask[0].text, xtask[1].text, date)
