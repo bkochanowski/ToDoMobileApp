@@ -11,6 +11,8 @@
         Rectangle:
             pos: self.pos
             size: self.size
+
+# left side navigation menu
     NavigationDrawer
         id: nav
         anim_type: 'slide_above_simple'
@@ -26,43 +28,35 @@
                     pos: self.pos
                     size: self.size
             BoxLayout:
-                id: menu_bar
                 size_hint_y: .07
-                canvas.before:
+                canvas:
                     Color:
                         rgba: 0, .4,0,.8
                     Rectangle:
                         pos: self.pos
                         size: self.size
-                BoxLayout:
-                    orientation: 'horizontal'
-                    padding: [mtx.dp(15),0,mtx.dp(15),0]
-                    MenuButton:
-                        text: icon('zmdi-apps')
-                        size_hint_x: .2
-                        markup: True
-                        color: 1,1,1,1
-                        text_size: self.size
-                        font_size: mtx.sp(25)
-                        valign: 'middle'
-                        on_press:
-                            nav.toggle_state()
-                    MenuButton:
-                        text: 'zamknij'
-                        size_hint_x: .9
-                        on_press:
-                            nav.toggle_state()
-
+				MenuButton:
+					text: icon('zmdi-apps', 28)
+					markup: True
+					color: 1,1,1,1
+					halign: 'left'
+					on_release:
+						nav.toggle_state()
+				Widget:
             ListEntry:
-                text: '%s Dodaj zadanie'%icon('zmdi-edit')
+                text: '%s   Dodaj zadanie'%icon('zmdi-edit', 28)
                 markup: True
                 color: 1,1,1,1
                 size_hint_y: .1
+                on_press:
+                    app.animate_widget(self)
                 on_release:
                     nav.toggle_state()
                     app.root.add_new()
             Widget:
                 size_hint_y: .8
+
+# main menu starts here
         BoxLayout:
             orientation: 'vertical'
             BoxLayout:
@@ -77,20 +71,33 @@
                 padding: 15,5,5,5
                 MenuButton:
                     text: icon('zmdi-menu')
+                    size_hint_x: .4
                     markup: True
                     text_size: self.size
                     font_size: mtx.sp(24)
                     valign: 'middle'
+                    halign: 'left'
                     on_release: nav.toggle_state()
+                Widget:
                 BoxLayout:
                     halign: 'right'
                     Button:
-                        text: 'Zadania'
+                        text: icon('zmdi-assignment-check', 30)
+						markup: True
+						align: 'center'
+						color: 1,1,1,1
+                        on_press:
+                            app.animate_widget(self)
                         on_release: root.ids.scrn_mngr.current = 'task_scrn'
                     Button:
-                        text: 'Zakupy'
+                        text: icon('zmdi-shopping-cart', 30)
+						markup: True
+						color: 1,1,1,1
+                        on_press:
+                            app.animate_widget(self)
                         on_release: root.ids.scrn_mngr.current = 'shop_scrn'
 
+# Screen display part of window
             ScreenManager:
                 id: scrn_mngr
                 Screen:
@@ -128,6 +135,7 @@
                                     size_hint_y: None
                                     height: self.parent.height
                                     effect_cls: 'OpacityScrollEffect'
+									bar_height:'5dp'
                                     GridLayout:
                                         id: upcoming_wrapper
                                         rows: 1
@@ -135,20 +143,6 @@
                                         spacing: mtx.dp(20)
                                         size: self.minimum_size
                                         size_hint: [None, None]
-
-                                        # 1 random task below to test GridLayout display
-#                                        Task:
-#                                            name: 'Zadanie #1'
-#                                            details: 'Zrób aplikację. \n Utwórz mechanizm listy zakupów.'
-#                                            time: '22:02'
-#                                            size_hint: [None,None]
-#                                            size: [scroll_parent.width/1.5, scroll_parent.height-(.050*scroll_parent.height)]
-#                                        Task:
-#                                            name: 'Zadanie #2'
-#                                            details: 'Przerzuć każdy screen do innego pliku kv.'
-#                                            time: '20:02'
-#                                            size_hint: [None,None]
-#                                            size: [scroll_parent.width/1.5, scroll_parent.height-(.050*scroll_parent.height)]
                                         NewButton:
                                             on_release: app.root.add_new()
                                             size_hint: [None,None]
@@ -167,23 +161,24 @@
                                 pos: self.pos
                                 size: self.size
                         BoxLayout:
-                            size_hint_y: .15
+                            size_hint_y: .12
                             padding: [10,0]
                             Label:
                                 text: 'DO KUPIENIA'
                                 font_size: mtx.sp(14)
                                 bold: True
-                                size_hint_x: .5
                                 color: 0,0,0,1
                                 text_size: self.size
                                 halign: 'left'
                                 valign: 'center'
                         BoxLayout:
                             size_hint_y: .8
+                            padding: '20dp'
                             ScrollView:
                                 id: sv_shopping
                                 size_hint_y: None
                                 height: self.parent.height
+                                effect_cls: 'OpacityScrollEffect'
                                 GridLayout:
                                     id: shopping
                                     cols: 1
@@ -191,11 +186,25 @@
                                     size: self.minimum_size
                                     padding: '10sp'
                                     spacing: '10sp'
-                                    Widget
-                                    Widget
+                                    ItemToBuy:
+                                        item: 'jajka'
+                                        size_hint: [1,None]
+                                        size: [1, mtx.dp(70)]
+                                    ItemToBuy:
+                                        item: 'mleko'
+                                        size_hint: [1,None]
+                                        size: [1, mtx.dp(70)]
+                                    ItemToBuy:
+                                        item: 'chleb'
+                                        size_hint: [1,None]
+                                        size: [1, mtx.dp(70)]
+                                    ItemToBuy:
+                                        item: 'kawa'
+                                        size_hint: [1,None]
+                                        size: [1, mtx.dp(70)]
                         CircleButton:
                             id: cta
-                            text: '%s'%(icon('zmdi-plus',32))
+                            text: '%s'%(icon('zmdi-plus',40))
                             size_hint_y: .2
 
 <NewTask>:
@@ -218,6 +227,8 @@
 				id: task_name
 				hint_text: 'Wpisz nazwę zadania'
 				hint_text_color: 1,1,1,1
+				write_tab: False
+				multiline: False
 		BoxLayout:
             size_hint_y: .15
             padding: '4dp'
@@ -285,7 +296,7 @@
 		size: self.size
 		shorten: True
 		shorten_from: 'right'
-		halign: 'right'
+		halign: 'left'
 	BoxLayout:
 		size_hint_y: .07
 		Label:
@@ -306,29 +317,57 @@
 		size_hint_y: .38
         id: task_details
         text: root.details
-        multiline: True
-        font_size: mtx.sp(12)
         color: 0,0,0,1
-        text_size: None, self.texture_size[1]
-        size: self.size
-        halign: 'right'
-        shorten: True
-        shorten_from: 'right'
+        font_size: mtx.sp(12)
+		halign: 'left'
+		valign: 'middle'
+        multiline: True
+#        text_size: None, self.texture_size[1]
+#        size: self.size
     BoxLayout:
     	size_hint_y: .3
-    AnchorLayout:
-        anchor_x: 'right'
-        anchor_y: 'bottom'
-        size_hint_y: .1
-        MenuButton:
-            text: icon('zmdi-delete')
-            markup: True
-            font_size: '24sp'
-            size_hint_x: .3
+        AnchorLayout:
+            anchor_x: 'right'
+            anchor_y: 'bottom'
+            size_hint_y: .3
+            MenuButton:
+                text: icon('zmdi-delete')
+                markup: True
+                font_size: '24sp'
+                size_hint_x: .3
+                color: 1,1,1,1
+                on_release: app.root.delete_task(root)
+
+<ItemToBuy>
+    BoxLayout:
+        orientation: 'horizontal'
+        padding: mtx.dp(15)
+        canvas.before:
+            Color:
+                rgba:  0,0,.7,.7
+            RoundedRectangle:
+                size: self.size
+                pos: self.pos
+                radius: [10]
+        Label:
+            id: shopping_item
+            text: root.item
+            bold: True
+            font_size: mtx.sp(20)
+            valign: 'middle'
             color: 1,1,1,1
-			on_release: app.root.delete_task(root)
-
-
+            text_size: None, self.texture_size[1]
+            size: self.size
+        AnchorLayout:
+            anchor_x: 'right'
+            anchor_y: 'bottom'
+            valign: 'middle'
+            MenuButton:
+                text: icon('zmdi-delete')
+                markup: True
+                font_size: '24sp'
+                size_hint_x: .3
+                color: 1,1,1,1
 
 <ListEntry@MenuButton>:
 	text_size: self.size
@@ -391,3 +430,4 @@
 			Ellipse:
 				pos: self.pos
 				size: self.size
+

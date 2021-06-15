@@ -8,7 +8,7 @@ from kivy.animation import Animation
 
 from kivy.garden.circulardatetimepicker import CircularTimePicker as CTP
 
-from kivy.properties import StringProperty
+from kivy.properties import StringProperty, ObjectProperty
 
 from kivy.metrics import sp, dp
 from app.storage.db import Database
@@ -56,10 +56,17 @@ class Task(BoxLayout):
         super().__init__(**kwargs)
 
 
-class MainWindow(BoxLayout):
+class ItemToBuy( BoxLayout):
+    item = StringProperty('')
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
+
+class MainWindow(BoxLayout):
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         self.db = Database()
         self.init_view()
         Clock.schedule_interval(self.pulsating_button, 5)
@@ -115,8 +122,8 @@ class MainWindow(BoxLayout):
             task.size = [scroll_parent.width / 1.5, scroll_parent.height -
                          (.05 * scroll_parent.height)]
 
-            date = ' '.join([xtask[3].text, xtask[2].text])
-            task_ = (xtask[0].text, xtask[1].text, date)
+            datetime = ' '.join([xtask[2].text, xtask[3].text])
+            task_ = (xtask[0].text, xtask[1].text, datetime)
             if self.db.add_task(task_):
                 uw.add_widget(task)
             mv.dismiss()
@@ -129,5 +136,10 @@ class MainWindow(BoxLayout):
 
     def delete_task(self, task: Task):
         name = task.name
+        uw = self.ids.upcoming_wrapper
+
         if self.db.delete_task(name):
             task.parent.remove_widget(task)
+
+
+
