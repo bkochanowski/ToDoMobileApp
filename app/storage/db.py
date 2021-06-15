@@ -11,7 +11,7 @@ class Database(object):
 
             sql_tasks = '''CREATE TABLE tasks(id integer primary key, name text not null, details text, 
             date text not null)'''
-            sql_shop = '''CREATE TABLE shopping(id integer primary key, name text not null)'''
+            sql_shopping = '''CREATE TABLE shopping(id integer primary key, name text not null)'''
 
             cur.execute(sql_tasks)
             cur.execute(sql_shop)
@@ -79,6 +79,54 @@ class Database(object):
             conn.commit()
 
             return True
+        except Exception as e:
+            print(e)
+            return False
+
+    def get_items(self):
+        conn = self.db_connect()
+        cur = conn.cursor()
+
+        try:
+            sql_shopping = '''SELECT * FROM shopping'''
+            cur.execute(sql_shopping)
+            conn.commit()
+            data = cur.fetchall()
+
+            return data
+
+        except Exception as e:
+            print(e)
+            return False
+
+
+
+    def add_item(self, item):
+        conn = self.db_connect()
+        cur = conn.cursor()
+
+        try:
+            sql_shopping = 'INSERT INTO shopping(name) VALUES(item)'
+            cur.execute(sql_shopping, item)
+            conn.commit()
+
+            return True
+
+        except Exception as e:
+            print(e)
+            return False
+
+    def delete_item(self, name):
+        conn = self.db_connect()
+        cur = conn.cursor()
+
+        try:
+            sql_shopping = '''DELETE FROM tasks WHERE name=?'''
+            cur.execute(sql_shopping, [name])
+            conn.commit()
+
+            return True
+
         except Exception as e:
             print(e)
             return False
