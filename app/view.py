@@ -41,6 +41,11 @@ class NewTask(ModalView):
         self.ids.task_time.text = str(time)
 
 
+class NewItem(ModalView):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+
 class NewButton(ButtonBehavior, BoxLayout):
     pass
 
@@ -56,8 +61,8 @@ class Task(BoxLayout):
         super().__init__(**kwargs)
 
 
-class ItemToBuy( BoxLayout):
-    item = StringProperty('')
+class ItemToBuy(BoxLayout):
+    name = StringProperty('')
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -141,5 +146,38 @@ class MainWindow(BoxLayout):
         if self.db.delete_task(name):
             task.parent.remove_widget(task)
 
+    def add_new_item(self):
+        ni = NewItem()
+        ni.open()
 
+    def add_item(self, mv, shopping_item):
+        error = False
+        scroll_parent = Window
+        sw = self.ids.shopping_wrapper
 
+        if len(shopping_item.text) < 3:
+            shopping_item.hint_text = '**Pole wymagane**'
+            shopping_item.hint_text_color = [1, 0, 0, 1]
+            error = True
+        if error:
+            print('za krótka informacja o zadaniu')
+        else:
+            product = ItemToBuy()
+            product.name = shopping_item.text
+
+            product.size_hint = [None, None]
+            product.size = [scroll_parent.width, scroll_parent.height -
+                            (.85 * scroll_parent.height)]
+
+            product_ = shopping_item.text
+
+            if self.db.add_item(product_):
+                sw.add_widget(product)
+            mv.dismiss()
+
+    def delete_item(self, product: ItemToBuy):
+        name = product.name
+        # sw = self.ids.shopping_wrapper
+
+        if self.db.delete_item(name):
+            product.parent.remove_widget(product)
