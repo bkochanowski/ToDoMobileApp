@@ -14,7 +14,7 @@ class Database(object):
             sql_shopping = '''CREATE TABLE shopping(id integer primary key, name text not null)'''
 
             cur.execute(sql_tasks)
-            cur.execute(sql_shop)
+            cur.execute(sql_shopping)
 
     def db_connect(self):
         conn = sqlite3.connect(os.path.join(self.path, 'db.sqlite'))
@@ -99,15 +99,13 @@ class Database(object):
             print(e)
             return False
 
-
-
-    def add_item(self, item):
+    def add_item(self, shopping_item:str):
         conn = self.db_connect()
         cur = conn.cursor()
 
         try:
-            sql_shopping = 'INSERT INTO shopping(name) VALUES(item)'
-            cur.execute(sql_shopping, item)
+            sql_shopping = 'INSERT INTO shopping (name) VALUES(?)'
+            cur.execute(sql_shopping, (shopping_item,))
             conn.commit()
 
             return True
