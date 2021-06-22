@@ -119,7 +119,7 @@ class Database(object):
         cur = conn.cursor()
 
         try:
-            sql_shopping = '''DELETE FROM tasks WHERE name=?'''
+            sql_shopping = '''DELETE FROM shopping WHERE name=?'''
             cur.execute(sql_shopping, [name])
             conn.commit()
 
