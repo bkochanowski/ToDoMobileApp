@@ -24,7 +24,7 @@ class MainApp(App):
 
     def reset(self, *args):
         widget = args[1]
-        widget.background_color = (1, 1, 1, .4)
+        widget.background_color = background_color=(0, .35,0,.8)
 
     def on_pause(self):
         return True

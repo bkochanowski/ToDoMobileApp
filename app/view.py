@@ -73,10 +73,11 @@ class MainWindow(BoxLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.db = Database()
-        self.init_view()
+        self.init_task()
+        self.init_shopping()
         Clock.schedule_interval(self.pulsating_button, 5)
 
-    def init_view(self):
+    def init_task(self):
         all_tasks = self.db.get_tasks()
         scroll_parent = Window
         uw = self.ids.upcoming_wrapper
@@ -92,6 +93,23 @@ class MainWindow(BoxLayout):
             task.size = [scroll_parent.width / 1.5, 45]
 
             uw.add_widget(task)
+
+    def init_shopping(self):
+        all_items = self.db.get_items()
+        sw = self.ids.shopping_wrapper
+        for t in all_items:
+            item = ItemToBuy()
+            item.name = t[1]
+            item.size_hint = [1, None]
+            item.size = [1, dp(50)]
+
+            sw.add_widget(item)
+
+    def highlight_shopping(self):
+        self.ids['tsk_btn'].color = 1,1,1,.6
+
+    def highlight_tasks(self):
+        self.ids['shp_btn'].color = 1,1,1,.6
 
     def pulsating_button(self, dtx):
         before = dp(45)
@@ -146,6 +164,9 @@ class MainWindow(BoxLayout):
         if self.db.delete_task(name):
             task.parent.remove_widget(task)
 
+        if len(uw.children) > 1:
+            uw.add_widget(NewButton())
+
     def add_new_item(self):
         ni = NewItem()
         ni.open()
@@ -165,9 +186,8 @@ class MainWindow(BoxLayout):
             product = ItemToBuy()
             product.name = shopping_item.text
 
-            product.size_hint = [None, None]
-            product.size = [scroll_parent.width, scroll_parent.height -
-                            (.85 * scroll_parent.height)]
+            product.size_hint = [1, None]
+            product.size = [1, dp(50)]
 
             product_ = shopping_item.text
 

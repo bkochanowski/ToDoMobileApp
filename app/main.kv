@@ -16,7 +16,7 @@
     NavigationDrawer
         id: nav
         anim_type: 'slide_above_simple'
-        side_panel_width: .5*self.width
+        side_panel_width: .55*self.width
         BoxLayout:
             id: sidenav
             orientation: 'vertical'
@@ -27,32 +27,31 @@
                 Rectangle:
                     pos: self.pos
                     size: self.size
-            BoxLayout:
-                size_hint_y: .07
-                canvas:
-                    Color:
-                        rgba: 0, .4,0,.8
-                    Rectangle:
-                        pos: self.pos
-                        size: self.size
-				MenuButton:
-					text: icon('zmdi-apps', 28)
-					markup: True
-					color: 1,1,1,1
-					halign: 'left'
-					on_release:
-						nav.toggle_state()
-				Widget:
             ListEntry:
-                text: '%s   Dodaj zadanie'%icon('zmdi-edit', 28)
+                text: '%s   zamknij'%icon('zmdi-apps', 28)
+                markup: True
+                color: 1,1,1,1
+                background_color: 1,1,1,.1
+                halign: 'justify'
+                size_hint_y: .1
+                on_release:
+                    nav.toggle_state()
+            ListEntry:
+                text: '%s Dodaj zadanie'% icon('zmdi-calendar-note', 26)
                 markup: True
                 color: 1,1,1,1
                 size_hint_y: .1
-                on_press:
-                    app.animate_widget(self)
                 on_release:
                     nav.toggle_state()
                     app.root.add_new()
+            ListEntry:
+                text: '%s Dodaj do zakupów'%icon('zmdi-shopping-cart-plus', 28)
+                markup: True
+                color: 1,1,1,1
+                size_hint_y: .1
+                on_release:
+                    nav.toggle_state()
+                    app.root.add_new_item()
             Widget:
                 size_hint_y: .8
 
@@ -81,21 +80,28 @@
                 Widget:
                 BoxLayout:
                     halign: 'right'
-                    Button:
+                    MenuButton:
+                        id: tsk_btn
                         text: icon('zmdi-assignment-check', 30)
 						markup: True
 						align: 'center'
 						color: 1,1,1,1
+						background_color: 0, .35,0,.8
                         on_press:
                             app.animate_widget(self)
+                            app.root.highlight_tasks()
                         on_release: root.ids.scrn_mngr.current = 'task_scrn'
-                    Button:
+                    MenuButton:
+                        id: shp_btn
                         text: icon('zmdi-shopping-cart', 30)
 						markup: True
-						color: 1,1,1,1
+						color: 1,1,1,.6
+						background_color: 0, .35,0,.8
                         on_press:
                             app.animate_widget(self)
-                        on_release: root.ids.scrn_mngr.current = 'shop_scrn'
+                            app.root.highlight_shopping()
+                        on_release:
+                            root.ids.scrn_mngr.current = 'shop_scrn'
 
 # Screen display part of window
             ScreenManager:
@@ -172,7 +178,7 @@
                                 halign: 'left'
                                 valign: 'center'
                         BoxLayout:
-                            size_hint_y: .8
+                            size_hint_y: .88
                             padding: '20dp'
                             id: scroll_item_parent
                             ScrollView:
@@ -187,26 +193,25 @@
                                     size: self.minimum_size
                                     padding: '10sp'
                                     spacing: '10sp'
-                                    ItemToBuy:
-                                        name: 'jajka'
-                                        size_hint: [1,None]
-                                        size: [1, mtx.dp(70)]
-                                    ItemToBuy:
-                                        name: 'mleko'
-                                        size_hint: [1,None]
-                                        size: [1, mtx.dp(70)]
-                                    ItemToBuy:
-                                        name: 'chleb'
-                                        size_hint: [1,None]
-                                        size: [1, mtx.dp(70)]
-                                    ItemToBuy:
-                                        name: 'kawa'
-                                        size_hint: [1,None]
-                                        size: [1, mtx.dp(70)]
-                        CircleButton:
-                            id: cta
-                            text: '%s'%(icon('zmdi-plus',40))
-                            size_hint_y: .2
+#                                    ItemToBuy:
+#                                        name: 'jajka'
+#                                        size_hint: [1,None]
+#                                        size: [1, mtx.dp(70)]
+#                                    ItemToBuy:
+#                                        name: 'mleko'
+#                                        size_hint: [1,None]
+#                                        size: [1, mtx.dp(70)]
+#                                    ItemToBuy:
+#                                        name: 'chleb'
+#                                        size_hint: [1,None]
+#                                        size: [1, mtx.dp(70)]
+#                                    ItemToBuy:
+#                                        name: 'kawa'
+#                                        size_hint: [1,None]
+#                                        size: [1, mtx.dp(70)]
+                    CircleButton:
+                        id: cta
+                        text: '%s'%(icon('zmdi-plus',40))
 
 <NewTask>:
 	size_hint: [.8,.7]
@@ -355,15 +360,16 @@
 		Widget:
 			size_hint_y: .2
 		BoxLayout:
-			size_hint_y: .4
+			size_hint_y: .3
 			padding: '4dp'
-			FlatInput:
+			TextInput:
 				id: shopping_item
-				hint_text: 'Wpisz produkt'
-				hint_text_color: 1,1,1,1
+				hint_text: 'Wpisz produkt do kupienia'
+				halign: 'center'
+				hint_text_color: 0,0,0,.7
 				multiline: False
 		Widget:
-			size_hint_y: .25
+			size_hint_y: .35
 		MenuButton:
 			text: 'Zapisz'
 			bold: True
@@ -375,7 +381,6 @@
 				RoundedRectangle:
 					pos: self.pos
 					size: self.size
-
 
 <ItemToBuy>
     BoxLayout:
@@ -407,17 +412,12 @@
                 font_size: '24sp'
                 size_hint_x: .3
                 color: 1,1,1,1
-                on_release: root.parent.remove_widget(root)
+                on_release: app.root.delete_item(root)
 
 <ListEntry@MenuButton>:
 	text_size: self.size
 	valign: 'middle'
-	canvas.before:
-		Color:
-			rgba: 1,1,1,1
-		Rectangle:
-			pos: self.pos
-			size: [self.size[0], mtx.dp(1)]
+	halign: 'left'
 
 
 <NewButton>:
@@ -456,7 +456,7 @@
 	btn_size: (mtx.dp(60),mtx.dp(60))
 	size: (mtx.dp(60),mtx.dp(60))
 	btn_color: (0,0,.7,1)
-	pos_hint: {"x":.7,}
+	pos_hint: {"x":.7, 'y': .05}
 	Button:
 		text: add_button.text
 		markup: True
