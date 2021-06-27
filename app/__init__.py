@@ -17,14 +17,14 @@ class MainApp(App):
     def build(self):
         return MainWindow()
 
-    def animate_widget(self, widget, *args):
-        anim = Animation(background_color=[1, 1, 1, 1], duration=.5)
+    def animate_menu_widget(self, widget, *args):
+        anim = Animation(color=[1, 1, 1, 1], duration=.5)
         anim.bind(on_complete=self.reset)
         anim.start(widget)
 
     def reset(self, *args):
         widget = args[1]
-        widget.background_color = background_color=(0, .35,0,.8)
+        widget.background_color = background_color=(0,.35,0,.8)
 
     def on_pause(self):
         return True
