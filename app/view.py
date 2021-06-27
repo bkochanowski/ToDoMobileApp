@@ -3,14 +3,14 @@ from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.button import Button
 from kivy.uix.modalview import ModalView
 from kivy.core.window import Window
-from kivy.clock import Clock
+# from kivy.clock import Clock
 from kivy.animation import Animation
 
 from kivy.garden.circulardatetimepicker import CircularTimePicker as CTP
 
 from kivy.properties import StringProperty, ObjectProperty
 
-from kivy.metrics import sp, dp
+from kivy.metrics import dp
 from app.storage.db import Database
 
 
@@ -23,7 +23,8 @@ class NewTask(ModalView):
         box = BoxLayout(orientation='vertical')
         mv.add_widget(box)
 
-        cl = CTP(color=[1, 1, 1, 1])
+        ctp_settings = ("[color={am_color}][ref=am]RANO[/ref][/color]\n[color={pm_color}][ref=pm]POPOŁUDNIE[/ref][/color]")
+        cl = CTP(color=[1, 1, 1, 1], selector_color=[0,.7,0], ampm_format=ctp_settings)
         cl.bind(time=self.set_time)
 
         submit = Button(text='Zapisz', background_normal='',
@@ -62,6 +63,8 @@ class Task(BoxLayout):
 
 
 class ItemToBuy(BoxLayout):
+    """this class represent each new shopping list item added by the user"""
+    done = ObjectProperty(None)
     name = StringProperty('')
 
     def __init__(self, **kwargs):
@@ -75,12 +78,20 @@ class MainWindow(BoxLayout):
         self.db = Database()
         self.init_task()
         self.init_shopping()
-        Clock.schedule_interval(self.pulsating_button, 5)
+        # Clock.schedule_interval(self.pulsating_button, 5)
 
     def init_task(self):
+        """getting all tasks from DB"""
         all_tasks = self.db.get_tasks()
-        scroll_parent = Window
+        scroll_parent = self.ids.scroll_parent
         uw = self.ids.upcoming_wrapper
+
+        if not all_tasks:
+            new_btn = NewButton()
+            new_btn.size_hint = [None, None]
+            new_btn.size = [dp(200), dp(300)]
+            new_btn.bind(on_release=self.add_new)
+            uw.add_widget(new_btn)
 
         for t in all_tasks:
             task = Task()
@@ -89,12 +100,13 @@ class MainWindow(BoxLayout):
             date, time = t[3].rsplit(' ', 1)
             task.time = time
             task.date = date
-            task.size_hint = [None, 1]
-            task.size = [scroll_parent.width / 1.5, 45]
+            size_hint: [None,1]
+            size: [scroll_parent.width/1.5]
 
             uw.add_widget(task)
 
     def init_shopping(self):
+        """getting all products to buy from DB"""
         all_items = self.db.get_items()
         sw = self.ids.shopping_wrapper
         for t in all_items:
@@ -106,12 +118,15 @@ class MainWindow(BoxLayout):
             sw.add_widget(item)
 
     def highlight_shopping(self):
+        """if shopping screen is on, it turns tasks menu button slightly darker"""
         self.ids['tsk_btn'].color = 1,1,1,.6
 
     def highlight_tasks(self):
+        """if task screen is on, it turns shopping menu button slightly darker"""
         self.ids['shp_btn'].color = 1,1,1,.6
 
     def pulsating_button(self, dtx):
+        """method for animating button which adds new product to buy during on_press event"""
         before = dp(45)
         after = dp(55)
         anim = Animation(btn_size=(before, before), t='in_quad', duration=.5) + Animation(btn_size=(after, after),
@@ -119,7 +134,7 @@ class MainWindow(BoxLayout):
         target = self.ids.cta
         anim.start(target)
 
-    def add_new(self):
+    def add_new(self, instance):
         nt = NewTask()
         nt.open()
 
@@ -164,8 +179,13 @@ class MainWindow(BoxLayout):
         if self.db.delete_task(name):
             task.parent.remove_widget(task)
 
-        if len(uw.children) > 1:
-            uw.add_widget(NewButton())
+        all_tasks = self.db.get_tasks()
+        if not all_tasks:
+            new_btn = NewButton()
+            new_btn.size_hint = [None, None]
+            new_btn.size = [dp(200), dp(300)]
+            new_btn.bind(on_release=self.add_new)
+            uw.add_widget(new_btn)
 
     def add_new_item(self):
         ni = NewItem()
@@ -181,13 +201,13 @@ class MainWindow(BoxLayout):
             shopping_item.hint_text_color = [1, 0, 0, 1]
             error = True
         if error:
-            print('za krótka informacja o zadaniu')
+            print('za krótka nazwa produktu')
         else:
             product = ItemToBuy()
             product.name = shopping_item.text
 
             product.size_hint = [1, None]
-            product.size = [1, dp(50)]
+            product.size = [1, dp(55)]
 
             product_ = shopping_item.text
 
