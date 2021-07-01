@@ -43,7 +43,7 @@
                 size_hint_y: .1
                 on_release:
                     nav.toggle_state()
-                    app.root.add_new()
+                    app.root.add_new(self)
             ListEntry:
                 text: '%s Dodaj do zakupów'%icon('zmdi-shopping-cart-plus', 28)
                 markup: True
@@ -190,22 +190,6 @@
                                     size: self.minimum_size
                                     padding: '10sp'
                                     spacing: '10sp'
-#                                    ItemToBuy:
-#                                        name: 'jajka'
-#                                        size_hint: [1,None]
-#                                        size: [1, mtx.dp(70)]
-#                                    ItemToBuy:
-#                                        name: 'mleko'
-#                                        size_hint: [1,None]
-#                                        size: [1, mtx.dp(70)]
-#                                    ItemToBuy:
-#                                        name: 'chleb'
-#                                        size_hint: [1,None]
-#                                        size: [1, mtx.dp(70)]
-#                                    ItemToBuy:
-#                                        name: 'kawa'
-#                                        size_hint: [1,None]
-#                                        size: [1, mtx.dp(70)]
                     CircleButton:
                         id: cta
                         text: '%s'%(icon('zmdi-plus',40))
@@ -224,21 +208,36 @@
 				size: self.size
 				radius: [7]
 		BoxLayout:
+			orientation: 'horizontal'
 			size_hint_y: .15
 			padding: '4dp'
+			Label:
+				text: 'Tytuł:'
+				color: 0,0,0,1
+				size_hint_x: .2
 			FlatInput:
 				id: task_name
 				hint_text: 'Wpisz nazwę zadania'
 				hint_text_color: 1,1,1,1
 				write_tab: False
 				multiline: False
+				size_hint_x: .7
+				size_hint_y: .85
 		BoxLayout:
-            size_hint_y: .15
+            orientation: 'horizontal'
+            size_hint_y: .3
             padding: '4dp'
-            FlatInput:
+            Label:
+                text: 'Opis:'
+                color: 0,0,0,1
+                size_hint_x: .2
+                halign: 'left'
+            TextInput:
                 id: task_details
+                size_hint_x: .8
+                size_hint_y: .7
                 hint_text: 'Wpisz szczegóły zadania'
-                hint_text_color: 1,1,1,1
+                hint_text_color: 0,0,0,.7
 		Widget:
 			size_hint_y: .1
 		BoxLayout:
@@ -257,31 +256,32 @@
 #					Rectangle:
 #						pos: self.pos
 #						size: [self.size[0], 1]
-			MenuButton:
+			Button:
 				id: task_time
-				text: '00:00:00'
+#				text: 'czas 00:00'
+				text: '%s 00:00'%icon('zmdi-time-countdown')
+                markup: True
 				color: 0,0,0,1
+				background_color: 0,.3,0,.4
 				size_hint_x: .5
 				on_release: root.get_time()
-		Widget:
-			size_hint_y: .2
-		MenuButton:
-			text: 'Zapisz'
-			bold: True
-			size_hint_y: .2
-			on_release: app.root.add_task(root, (task_name, task_details, task_date, task_time))
-			canvas.before:
-				Color:
-					rgba: 0,.3,0,.7
-				RoundedRectangle:
-					pos: self.pos
-					size: self.size
-
+        BoxLayout:
+		    id: submit_wrapper
+		    size_hint_y: .2
+            MenuButton:
+                text: 'Zapisz'
+                bold: True
+                on_release: app.root.add_task(root, (task_name, task_details, task_date, task_time))
+                canvas.before:
+                    Color:
+                        rgba: 0,.3,0,.7
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
 
 <Task>:
     orientation: 'vertical'
 	padding: mtx.dp(15)
-	size_hint: None, None
     canvas.before:
         Color:
             rgba: [0, 0, .5, .35]
@@ -301,21 +301,26 @@
 		shorten_from: 'right'
 		halign: 'left'
 	BoxLayout:
-		size_hint_y: .07
+		size_hint_y: .1
 		Label:
 			text: icon('zmdi-time-countdown')
 			markup: True
-			size_hint_y: .8
+			size_hint_y: .55
 			size_hint_x: .15
 			color: 1,1,1,.9
 			halign: 'left'
 		Label:
 			id: task_time
 			text: root.time
-			size_hint_y: .20
+			size_hint_y: .50
 			text_size: self.size
 			color: 1,1,1,.9
 			halign: 'left'
+		Label:
+			text: root.date
+			size_hint_y: .5
+			text_size: self.size
+			color: 1,1,1,.9
 	Label:
 		size_hint_y: .38
         id: task_details
@@ -325,17 +330,20 @@
 		halign: 'left'
 		valign: 'middle'
         multiline: True
+        text_size: self.size
     BoxLayout:
     	size_hint_y: .3
         AnchorLayout:
             anchor_x: 'right'
             anchor_y: 'bottom'
             size_hint_y: .3
-            Label:
-                text: 'edycja'
+            MenuButton:
+                text: '%s edycja'%icon('zmdi-refresh')
+                markup: True
                 color: 0,0,.8,.7
                 bold: True
                 underline: True
+                on_release: app.root.get_update_task(root)
             MenuButton:
                 text: icon('zmdi-delete')
                 markup: True
