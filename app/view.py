@@ -20,15 +20,15 @@ class NewTask(ModalView):
 
     def get_time(self):
         mv = ModalView(size_hint=[.8, .6])
-        box = BoxLayout(orientation='vertical')
+        box = BoxLayout(orientation='vertical', size_hint=[.9, .9])
         mv.add_widget(box)
 
-        ctp_settings = ("[color={am_color}][ref=am]RANO[/ref][/color]\n[color={pm_color}][ref=pm]POPOŁUDNIE[/ref][/color]")
-        cl = CTP(color=[1, 1, 1, 1], selector_color=[0,.7,0], ampm_format=ctp_settings)
+        ctp_settings = "[color={am_color}][ref=am]RANO[/ref][/color]\n[color={pm_color}][ref=pm]POPOŁUDNIE[/ref][/color]"
+        cl = CTP(color=[1, 1, 1, 1], selector_color=[0, .6, 0], ampm_format=ctp_settings)
         cl.bind(time=self.set_time)
 
         submit = Button(text='Zapisz', background_normal='',
-                        color=[0, .3, 0, .7], background_color=[1, 1, 1, 1], size_hint_y=.15)
+                        color=[0, .3, 0, .7], background_color=[1, 1, 1, 1], size_hint_y=.2)
         submit.bind(on_release=lambda x: self.update_time(cl.time, mv))
         box.add_widget(cl)
         box.add_widget(submit)
@@ -64,7 +64,7 @@ class Task(BoxLayout):
 
 class ItemToBuy(BoxLayout):
     """this class represent each new shopping list item added by the user"""
-    done = ObjectProperty(None)
+    is_done = ObjectProperty(None)
     name = StringProperty('')
 
     def __init__(self, **kwargs):
@@ -78,18 +78,18 @@ class MainWindow(BoxLayout):
         self.db = Database()
         self.init_task()
         self.init_shopping()
-        # Clock.schedule_interval(self.pulsating_button, 5)
 
     def init_task(self):
         """getting all tasks from DB"""
         all_tasks = self.db.get_tasks()
-        scroll_parent = self.ids.scroll_parent
+        scroll_parent = Window
         uw = self.ids.upcoming_wrapper
 
         if not all_tasks:
             new_btn = NewButton()
             new_btn.size_hint = [None, None]
-            new_btn.size = [dp(200), dp(300)]
+            new_btn.size = [scroll_parent.width / 1.5, scroll_parent.height -
+                            (.35 * scroll_parent.height)]
             new_btn.bind(on_release=self.add_new)
             uw.add_widget(new_btn)
 
@@ -100,8 +100,9 @@ class MainWindow(BoxLayout):
             date, time = t[3].rsplit(' ', 1)
             task.time = time
             task.date = date
-            size_hint: [None,1]
-            size: [scroll_parent.width/1.5]
+            task.size_hint = [None, None]
+            task.size = [scroll_parent.width / 1.5, scroll_parent.height -
+                         (.35 * scroll_parent.height)]
 
             uw.add_widget(task)
 
@@ -113,17 +114,17 @@ class MainWindow(BoxLayout):
             item = ItemToBuy()
             item.name = t[1]
             item.size_hint = [1, None]
-            item.size = [1, dp(50)]
+            item.size = [1, dp(55)]
 
             sw.add_widget(item)
 
     def highlight_shopping(self):
         """if shopping screen is on, it turns tasks menu button slightly darker"""
-        self.ids['tsk_btn'].color = 1,1,1,.6
+        self.ids['tsk_btn'].color = 1, 1, 1, .6
 
     def highlight_tasks(self):
         """if task screen is on, it turns shopping menu button slightly darker"""
-        self.ids['shp_btn'].color = 1,1,1,.6
+        self.ids['shp_btn'].color = 1, 1, 1, .6
 
     def pulsating_button(self, dtx):
         """method for animating button which adds new product to buy during on_press event"""
@@ -140,7 +141,7 @@ class MainWindow(BoxLayout):
 
     def add_task(self, mv, xtask: tuple):
         error = False
-        scroll_parent = self.ids.scroll_parent
+        scroll_parent = Window
         uw = self.ids.upcoming_wrapper
 
         for t in xtask:
@@ -158,7 +159,7 @@ class MainWindow(BoxLayout):
             task.date = xtask[3].text
             task.size_hint = [None, None]
             task.size = [scroll_parent.width / 1.5, scroll_parent.height -
-                         (.05 * scroll_parent.height)]
+                         (.35 * scroll_parent.height)]
 
             datetime = ' '.join([xtask[2].text, xtask[3].text])
             task_ = (xtask[0].text, xtask[1].text, datetime)
@@ -171,6 +172,45 @@ class MainWindow(BoxLayout):
                     if type(child) == NewButton:
                         uw.remove_widget(child)
                         break
+
+    def get_update_task(self, instance):
+        nt = NewTask()
+        nt.ids.task_name.text = instance.name
+        nt.ids.task_details.text = instance.details
+        nt.ids.task_date.text = instance.date
+        nt.ids.task_time.text = instance.time
+        nt.ids.submit_wrapper.clear_widgets()
+        submit = Button(text='Aktualizuj', bold=True, background_normal='', background_color=(1, 0, 0, 1))
+        submit.bind(on_release=lambda x: self.update_task(nt, instance))
+        nt.ids.submit_wrapper.add_widget(submit)
+
+        nt.open()
+
+    def update_task(self, task_data, task):
+
+        xtask = [
+            task_data.ids.task_name.text,
+            task_data.ids.task_details.text,
+            task_data.ids.task_date.text,
+            task_data.ids.task_time.text
+        ]
+        error = None
+        for t in xtask:
+            if len(t) < 3:
+                t.hint_text = '**Pole wymagane**'
+                t.hint_text_color = [1, 0, 0, 1]
+                error = True
+        if error:
+            pass
+        else:
+            xtask = [xtask[0], xtask[1], ' '.join(xtask[2:], ), task.name]
+            if self.db.update_task(xtask):
+                task.name = task_data.ids.task_name.text
+                task.details = task_data.ids.task_details.text
+                task.time = task_data.ids.task_time.text
+                task.date = task_data.ids.task_date.text
+
+            task_data.dismiss()
 
     def delete_task(self, task: Task):
         name = task.name
