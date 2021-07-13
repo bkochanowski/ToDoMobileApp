@@ -27,7 +27,7 @@ class Database(object):
         cur = conn.cursor()
 
         try:
-            sql_tasks = '''SELECT * FROM tasks'''
+            sql_tasks = '''SELECT * FROM tasks ORDER BY date ASC'''
             cur.execute(sql_tasks)
             conn.commit()
             data = cur.fetchall()
@@ -88,7 +88,7 @@ class Database(object):
         cur = conn.cursor()
 
         try:
-            sql_shopping = '''SELECT * FROM shopping'''
+            sql_shopping = '''SELECT * FROM shopping ORDER BY is_done ASC'''
             cur.execute(sql_shopping)
             conn.commit()
             data = cur.fetchall()
@@ -120,7 +120,6 @@ class Database(object):
 
         try:
             sql_shopping = '''UPDATE shopping SET is_done=? WHERE name=?'''
-            item.append(item[0])
             cur.execute(sql_shopping, item)
             conn.commit()
 
