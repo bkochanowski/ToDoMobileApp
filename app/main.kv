@@ -5,13 +5,13 @@
 #: import DatePicker datepicker.datepicker.DatePicker
 
 <MainWindow>:
+    id: main
     canvas.before:
         Color:
             rgba: 1,1,1,1
         Rectangle:
             pos: self.pos
-            size: self.size
-
+            size: root.size
 # left side navigation menu
     NavigationDrawer
         id: nav
@@ -106,16 +106,17 @@
 # Screen display part of window
             ScreenManager:
                 id: scrn_mngr
+                canvas.before:
+                    Color:
+                        rgba: 1,1,1,1
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                        source: "app/mypic.jpg"
                 Screen:
                     name: 'task_scrn'
                     BoxLayout:
                         orientation: 'vertical'
-                        canvas.before:
-                            Color:
-                                rgba: 1,1,1,1
-                            Rectangle:
-                                pos: self.pos
-                                size: self.size
                         BoxLayout:
                             size_hint_y: .9
                             orientation: 'vertical'
@@ -141,7 +142,7 @@
                                     size_hint_y: None
                                     height: self.parent.height
                                     effect_cls: 'OpacityScrollEffect'
-									bar_height:'5dp'
+									bar_width:'10dp'
                                     GridLayout:
                                         id: upcoming_wrapper
                                         rows: 1
@@ -157,12 +158,6 @@
                     name: 'shop_scrn'
                     BoxLayout:
                         orientation: 'vertical'
-                        canvas.before:
-                            Color:
-                                rgba: 1,1,1,1
-                            Rectangle:
-                                pos: self.pos
-                                size: self.size
                         BoxLayout:
                             size_hint_y: .12
                             padding: [10,0]
@@ -258,8 +253,7 @@
 #						size: [self.size[0], 1]
 			Button:
 				id: task_time
-#				text: 'czas 00:00'
-				text: '%s 00:00'%icon('zmdi-time-countdown')
+				text: '%s 00:00:00'%icon('zmdi-time-countdown')
                 markup: True
 				color: 0,0,0,1
 				background_color: 0,.3,0,.4
@@ -282,9 +276,10 @@
 <Task>:
     orientation: 'vertical'
 	padding: mtx.dp(15)
+	tsk_clr: [.2, .2, .1, .65]
     canvas.before:
         Color:
-            rgba: [0, 0, .5, .35]
+            rgba: self.tsk_clr
         RoundedRectangle:
             pos: self.pos
             size: self.size
@@ -402,7 +397,7 @@
         padding: mtx.dp(15)
         canvas.before:
             Color:
-                rgba:  0,0,.7,.7
+                rgba: 0,0,.7,.7
             RoundedRectangle:
                 size: self.size
                 pos: self.pos
@@ -411,12 +406,7 @@
             valign: 'middle'
             size_hint_x: .1
             color: [1,1,1,.9]
-#            canvas.before:
-#                Color:
-#                    rgba: 1,1,1,1
-#                Rectangle:
-#                    size: self.size
-#                    pos: self.pos
+            on_active: app.root.checkbox_status(self, self.active)
         Label:
             id: shopping_item
             text: root.name
@@ -477,7 +467,7 @@
 	text: ''
 	btn_size: (mtx.dp(60),mtx.dp(60))
 	size: (mtx.dp(60),mtx.dp(60))
-	btn_color: (0,0,.7,1)
+	btn_color: (.7,.5,.5,1)
 	pos_hint: {"x":.7, 'y': .05}
 	Button:
 		text: add_button.text
