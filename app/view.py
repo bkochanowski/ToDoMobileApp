@@ -3,15 +3,15 @@ from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.button import Button
 from kivy.uix.modalview import ModalView
 from kivy.core.window import Window
-# from kivy.clock import Clock
 from kivy.animation import Animation
+from kivy.properties import StringProperty, ObjectProperty
 
 from kivy.garden.circulardatetimepicker import CircularTimePicker as CTP
 
-from kivy.properties import StringProperty, ObjectProperty
-
 from kivy.metrics import dp
 from app.storage.db import Database
+
+from datetime import date as Dt, datetime as Dte
 
 
 class NewTask(ModalView):
@@ -64,7 +64,7 @@ class Task(BoxLayout):
 
 class ItemToBuy(BoxLayout):
     """this class represent each new shopping list item added by the user"""
-    is_done = ObjectProperty(None)
+    is_done = StringProperty('False')
     name = StringProperty('')
 
     def __init__(self, **kwargs):
@@ -80,7 +80,7 @@ class MainWindow(BoxLayout):
         self.init_shopping()
 
     def init_task(self):
-        """getting all tasks from DB"""
+        """getting all tasks from DB on APP initialization"""
         all_tasks = self.db.get_tasks()
         scroll_parent = Window
         uw = self.ids.upcoming_wrapper
@@ -98,8 +98,15 @@ class MainWindow(BoxLayout):
             task.name = t[1]
             task.details = t[2]
             date, time = t[3].rsplit(' ', 1)
+            x = self.compare_date(date)
+            if x == 'today':
+                task.tsk_clr = (.7, .45, .1, .6)
+            elif x == 'past':
+                task.tsk_clr = (.7, 0, 0, .8)
+
             task.time = time
             task.date = date
+
             task.size_hint = [None, None]
             task.size = [scroll_parent.width / 1.5, scroll_parent.height -
                          (.35 * scroll_parent.height)]
@@ -107,23 +114,27 @@ class MainWindow(BoxLayout):
             uw.add_widget(task)
 
     def init_shopping(self):
-        """getting all products to buy from DB"""
+        """getting all products to buy from DB on APP initialization"""
         all_items = self.db.get_items()
         sw = self.ids.shopping_wrapper
         for t in all_items:
             item = ItemToBuy()
-            item.name = t[1]
+            if t[0] == "True":
+                item.backgrd_clr = (.8, .8, .8, .6)
+            else:
+                pass
+            item.name = t[2]
             item.size_hint = [1, None]
             item.size = [1, dp(55)]
 
             sw.add_widget(item)
 
     def highlight_shopping(self):
-        """if shopping screen is on, it turns tasks menu button slightly darker"""
+        """if shopping screen is currently displayed, it turns tasks menu button slightly darker"""
         self.ids['tsk_btn'].color = 1, 1, 1, .6
 
     def highlight_tasks(self):
-        """if task screen is on, it turns shopping menu button slightly darker"""
+        """if task screen is currently displayed, it turns shopping menu button slightly darker"""
         self.ids['shp_btn'].color = 1, 1, 1, .6
 
     def pulsating_button(self, dtx):
@@ -155,14 +166,19 @@ class MainWindow(BoxLayout):
             task = Task()
             task.name = xtask[0].text
             task.details = xtask[1].text
-            task.time = xtask[2].text
-            task.date = xtask[3].text
+            task.time = xtask[3].text
+            task.date = xtask[2].text
+            x = self.compare_date(task.date)
+            if x == 'today':
+                task.tsk_clr = (.7, .45, .1, .6)
+            elif x == 'past':
+                task.tsk_clr = (.7, 0, 0, .8)
             task.size_hint = [None, None]
             task.size = [scroll_parent.width / 1.5, scroll_parent.height -
                          (.35 * scroll_parent.height)]
 
-            datetime = ' '.join([xtask[2].text, xtask[3].text])
-            task_ = (xtask[0].text, xtask[1].text, datetime)
+            date_and_time = ' '.join([xtask[2].text, xtask[3].text])
+            task_ = (xtask[0].text, xtask[1].text, date_and_time)
             if self.db.add_task(task_):
                 uw.add_widget(task)
             mv.dismiss()
@@ -212,6 +228,21 @@ class MainWindow(BoxLayout):
 
             task_data.dismiss()
 
+    def compare_date(self, date: str):
+        today = Dt.today()
+
+        today_date = Dte.strftime(today, '%Y-%m-%d')
+        print(f' todays date: {today_date}')
+        task_date = str(Dte.strptime(date, '%d-%m-%Y').date())
+        print(f' task date: {task_date}')
+
+        if today_date > task_date:
+            return "past"
+        elif today_date == task_date:
+            return 'today'
+        else:
+            return 'future'
+
     def delete_task(self, task: Task):
         name = task.name
         uw = self.ids.upcoming_wrapper
@@ -254,6 +285,14 @@ class MainWindow(BoxLayout):
             if self.db.add_item(product_):
                 sw.add_widget(product)
             mv.dismiss()
+
+    def checkbox_status(self, instance, value):
+        status = ''
+        if value:
+            status = 'True'
+        else:
+            status = 'False'
+        print(status)
 
     def delete_item(self, product: ItemToBuy):
         name = product.name
