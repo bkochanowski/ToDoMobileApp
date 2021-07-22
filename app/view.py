@@ -1,29 +1,33 @@
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.behaviors import ButtonBehavior
+from kivy.uix.checkbox import CheckBox
 from kivy.uix.button import Button
 from kivy.uix.modalview import ModalView
 from kivy.core.window import Window
 from kivy.animation import Animation
-from kivy.properties import StringProperty, ObjectProperty
-
+from kivy.properties import StringProperty, BooleanProperty, ObjectProperty
+from kivy.clock import Clock
 from kivy.garden.circulardatetimepicker import CircularTimePicker as CTP
-
 from kivy.metrics import dp
 from app.storage.db import Database
-
 from datetime import date as Dt, datetime as Dte
 
 
 class NewTask(ModalView):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        Clock.schedule_once(self.set_name_focus, 1)
+
+    def set_name_focus(self, *args):
+        self.ids.task_name.focus = True
 
     def get_time(self):
         mv = ModalView(size_hint=[.8, .6])
         box = BoxLayout(orientation='vertical', size_hint=[.9, .9])
         mv.add_widget(box)
 
-        ctp_settings = "[color={am_color}][ref=am]RANO[/ref][/color]\n[color={pm_color}][ref=pm]POPOŁUDNIE[/ref][/color]"
+        ctp_settings = "[color={am_color}][ref=am]RANO[/ref][/color]\n[color={pm_color}][ref=pm]POPOŁUDNIE[/ref][" \
+                       "/color] "
         cl = CTP(color=[1, 1, 1, 1], selector_color=[0, .6, 0], ampm_format=ctp_settings)
         cl.bind(time=self.set_time)
 
@@ -64,7 +68,7 @@ class Task(BoxLayout):
 
 class ItemToBuy(BoxLayout):
     """this class represent each new shopping list item added by the user"""
-    is_done = StringProperty('False')
+    is_done = BooleanProperty()
     name = StringProperty('')
 
     def __init__(self, **kwargs):
@@ -119,15 +123,22 @@ class MainWindow(BoxLayout):
         sw = self.ids.shopping_wrapper
         for t in all_items:
             item = ItemToBuy()
-            if t[0] == "True":
-                item.backgrd_clr = (.8, .8, .8, .6)
-            else:
-                pass
+            state = self.string_to_bool(t[1])
+            if t[1] == 'True':
+                item.bcg_clr = [.5, .5, .5, .5]
+                item.is_done = True
+
             item.name = t[2]
             item.size_hint = [1, None]
             item.size = [1, dp(55)]
 
             sw.add_widget(item)
+
+    def string_to_bool(self, string):
+        if string == 'True':
+            return True
+        else:
+            return False
 
     def highlight_shopping(self):
         """if shopping screen is currently displayed, it turns tasks menu button slightly darker"""
@@ -138,7 +149,7 @@ class MainWindow(BoxLayout):
         self.ids['shp_btn'].color = 1, 1, 1, .6
 
     def pulsating_button(self, dtx):
-        """method for animating button which adds new product to buy during on_press event"""
+        """it animates button which adds new product to buy during on_press event"""
         before = dp(45)
         after = dp(55)
         anim = Animation(btn_size=(before, before), t='in_quad', duration=.5) + Animation(btn_size=(after, after),
@@ -168,6 +179,7 @@ class MainWindow(BoxLayout):
             task.details = xtask[1].text
             task.time = xtask[3].text
             task.date = xtask[2].text
+            print(task.date)
             x = self.compare_date(task.date)
             if x == 'today':
                 task.tsk_clr = (.7, .45, .1, .6)
@@ -180,7 +192,8 @@ class MainWindow(BoxLayout):
             date_and_time = ' '.join([xtask[2].text, xtask[3].text])
             task_ = (xtask[0].text, xtask[1].text, date_and_time)
             if self.db.add_task(task_):
-                uw.add_widget(task)
+                uw.clear_widgets()
+                self.init_task()
             mv.dismiss()
 
             if len(uw.children) > 1:
@@ -196,6 +209,7 @@ class MainWindow(BoxLayout):
         nt.ids.task_date.text = instance.date
         nt.ids.task_time.text = instance.time
         nt.ids.submit_wrapper.clear_widgets()
+
         submit = Button(text='Aktualizuj', bold=True, background_normal='', background_color=(1, 0, 0, 1))
         submit.bind(on_release=lambda x: self.update_task(nt, instance))
         nt.ids.submit_wrapper.add_widget(submit)
@@ -203,7 +217,7 @@ class MainWindow(BoxLayout):
         nt.open()
 
     def update_task(self, task_data, task):
-
+        uw = self.ids.upcoming_wrapper
         xtask = [
             task_data.ids.task_name.text,
             task_data.ids.task_details.text,
@@ -225,8 +239,17 @@ class MainWindow(BoxLayout):
                 task.details = task_data.ids.task_details.text
                 task.time = task_data.ids.task_time.text
                 task.date = task_data.ids.task_date.text
-
+                x = self.compare_date(task.date)
+                if x == 'today':
+                    task.tsk_clr = (.7, .45, .1, .6)
+                elif x == 'past':
+                    task.tsk_clr = (.7, 0, 0, .8)
+                else:
+                    task.tsk_clr = (.2, .2, .1, .65)
             task_data.dismiss()
+
+            uw.clear_widgets()
+            self.init_task()
 
     def compare_date(self, date: str):
         today = Dt.today()
@@ -286,13 +309,19 @@ class MainWindow(BoxLayout):
                 sw.add_widget(product)
             mv.dismiss()
 
-    def checkbox_status(self, instance, value):
-        status = ''
-        if value:
-            status = 'True'
-        else:
-            status = 'False'
-        print(status)
+    def checkbox_status(self, instance, xitem: tuple):
+        print(xitem)
+        sw = self.ids.shopping_wrapper
+
+        item = ItemToBuy()
+        item.is_done = str(xitem[0])
+        print(item.is_done)
+        item.name = xitem[1]
+        print(item.name)
+        _item = [item.is_done, item.name]
+        self.db.update_item_status(_item)
+        if item.is_done == 'True':
+            item.bcg_clr = (.5, .5, .5, .5)
 
     def delete_item(self, product: ItemToBuy):
         name = product.name
