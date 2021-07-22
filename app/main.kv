@@ -112,7 +112,7 @@
                     Rectangle:
                         pos: self.pos
                         size: self.size
-                        source: "app/mypic.jpg"
+                        source: "app/pngtree free background illustration.jpg"
                 Screen:
                     name: 'task_scrn'
                     BoxLayout:
@@ -218,6 +218,7 @@
 				multiline: False
 				size_hint_x: .7
 				size_hint_y: .85
+				on_text_validate: root.ids.task_details.focus = True
 		BoxLayout:
             orientation: 'horizontal'
             size_hint_y: .3
@@ -335,7 +336,7 @@
             MenuButton:
                 text: '%s edycja'%icon('zmdi-refresh')
                 markup: True
-                color: 0,0,.8,.7
+                color: 1,1,1,1
                 bold: True
                 underline: True
                 on_release: app.root.get_update_task(root)
@@ -391,40 +392,42 @@
 					size: self.size
             on_release: app.root.add_item(root, shopping_item)
 <ItemToBuy>
-    BoxLayout:
-        id: my_root
-        orientation: 'horizontal'
-        padding: mtx.dp(15)
-        canvas.before:
-            Color:
-                rgba: 0,0,.7,.7
-            RoundedRectangle:
-                size: self.size
-                pos: self.pos
-                radius: [10]
-        CheckBox:
-            valign: 'middle'
-            size_hint_x: .1
-            color: [1,1,1,.9]
-            on_active: app.root.checkbox_status(self, self.active)
-        Label:
-            id: shopping_item
-            text: root.name
-            font_size: mtx.sp(18)
-            text_size: (my_root.width - .35 * my_root.width), None
-            size: self.texture_size
-            valign: 'middle'
-            multiline: True
-            color: 1,1,1,1
+    id: product
+    orientation: 'horizontal'
+    padding: mtx.dp(15)
+    bcg_clr: [0,0,.7,.7]
+    canvas.before:
+        Color:
+            rgba: self.bcg_clr
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [10]
+    CheckBox:
+        id: is_done
+        valign: 'middle'
+        size_hint_x: .1
+        color: [1,1,1,.9]
+        active: 0
+        on_active: app.root.checkbox_status(root, (is_done.active, shopping_item.text))
+    Label:
+        id: shopping_item
+        text: root.name
+        font_size: mtx.sp(18)
+        text_size: (product.width - .35 * product.width), None
+        size: self.texture_size
+        valign: 'middle'
+        multiline: True
+        color: 1,1,1,1
 
 
-        MenuButton:
-            text: icon('zmdi-delete')
-            markup: True
-            font_size: '24sp'
-            size_hint_x: .15
-            color: 1,1,1,1
-            on_release: app.root.delete_item(root)
+    MenuButton:
+        text: icon('zmdi-delete')
+        markup: True
+        font_size: '24sp'
+        size_hint_x: .15
+        color: 1,1,1,1
+        on_release: app.root.delete_item(root)
 
 <ListEntry@MenuButton>:
 	text_size: self.size
