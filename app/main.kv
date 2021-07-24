@@ -112,7 +112,7 @@
                     Rectangle:
                         pos: self.pos
                         size: self.size
-                        source: "app/pngtree free background illustration.jpg"
+                        source: "app/assets/pngtree free background illustration.jpg"
                 Screen:
                     name: 'task_scrn'
                     BoxLayout:
@@ -392,6 +392,7 @@
 					size: self.size
             on_release: app.root.add_item(root, shopping_item)
 <ItemToBuy>
+    is_done: is_done
     id: product
     orientation: 'horizontal'
     padding: mtx.dp(15)
@@ -409,7 +410,7 @@
         size_hint_x: .1
         color: [1,1,1,.9]
         active: 0
-        on_active: app.root.checkbox_status(root, (is_done.active, shopping_item.text))
+        on_press: app.root.checkbox_status(root, (is_done.active, shopping_item.text))
     Label:
         id: shopping_item
         text: root.name

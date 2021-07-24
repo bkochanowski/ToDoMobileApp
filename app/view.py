@@ -68,7 +68,7 @@ class Task(BoxLayout):
 
 class ItemToBuy(BoxLayout):
     """this class represent each new shopping list item added by the user"""
-    is_done = BooleanProperty()
+    is_done = BooleanProperty(False)
     name = StringProperty('')
 
     def __init__(self, **kwargs):
@@ -126,7 +126,7 @@ class MainWindow(BoxLayout):
             state = self.string_to_bool(t[1])
             if t[1] == 'True':
                 item.bcg_clr = [.5, .5, .5, .5]
-                item.is_done = True
+                item.is_done.active = 1
 
             item.name = t[2]
             item.size_hint = [1, None]
@@ -319,13 +319,14 @@ class MainWindow(BoxLayout):
         item.name = xitem[1]
         print(item.name)
         _item = [item.is_done, item.name]
-        self.db.update_item_status(_item)
-        if item.is_done == 'True':
-            item.bcg_clr = (.5, .5, .5, .5)
+        if self.db.update_item_status(_item):
+            sw.clear_widgets()
+            self.init_shopping()
+
+
 
     def delete_item(self, product: ItemToBuy):
         name = product.name
-        # sw = self.ids.shopping_wrapper
 
         if self.db.delete_item(name):
             product.parent.remove_widget(product)
