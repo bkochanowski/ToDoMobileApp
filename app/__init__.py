@@ -1,17 +1,17 @@
 from kivy.app import App
 from kivy.animation import Animation
 from .view import MainWindow
-from kivy.core.window import Window
 
-# the purpose of this is to simulate smartphone screen size
-Window.size = (320, 545)
+
+# the purpose of this below is to simulate smartphone screen size on app start
+'''python main.py --size=540x1170 --dpi=409'''
 
 
 class MainApp(App):
     title = 'Kivy To-do and Shopping List app'
 
     def build_config(self, config):
-        config.setdefaults('kivy', {'keyboard_mode': ''})
+        config.setdefaults('kivy', {'keyboard_mode': 'system'})
         config.read('main.ini')
 
     def build(self):
