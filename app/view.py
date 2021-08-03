@@ -7,7 +7,7 @@ from kivy.core.window import Window
 from kivy.animation import Animation
 from kivy.properties import StringProperty, BooleanProperty, ObjectProperty
 from kivy.clock import Clock
-from kivy.garden.circulardatetimepicker import CircularTimePicker as CTP
+from libs.garden.circulardatetimepicker import CircularTimePicker as CTP
 from kivy.metrics import dp
 from app.storage.db import Database
 from datetime import date as Dt, datetime as Dte
@@ -130,7 +130,7 @@ class MainWindow(BoxLayout):
 
             item.name = t[2]
             item.size_hint = [1, None]
-            item.size = [1, dp(55)]
+            item.size = [1, dp(65)]
 
             sw.add_widget(item)
 
@@ -150,10 +150,10 @@ class MainWindow(BoxLayout):
 
     def pulsating_button(self, dtx):
         """it animates button which adds new product to buy during on_press event"""
-        before = dp(45)
-        after = dp(55)
-        anim = Animation(btn_size=(before, before), t='in_quad', duration=.5) + Animation(btn_size=(after, after),
-                                                                                          t='in_quad', duration=.5)
+        before = dp(55)
+        after = dp(65)
+        anim = Animation(btn_size=(before, before), t='in_quad', duration=.3) + Animation(btn_size=(after, after),
+                                                                                          t='in_quad', duration=.3)
         target = self.ids.cta
         anim.start(target)
 
@@ -301,7 +301,7 @@ class MainWindow(BoxLayout):
             product.name = shopping_item.text
 
             product.size_hint = [1, None]
-            product.size = [1, dp(55)]
+            product.size = [1, dp(65)]
 
             product_ = shopping_item.text
 
@@ -310,20 +310,15 @@ class MainWindow(BoxLayout):
             mv.dismiss()
 
     def checkbox_status(self, instance, xitem: tuple):
-        print(xitem)
         sw = self.ids.shopping_wrapper
 
         item = ItemToBuy()
         item.is_done = str(xitem[0])
-        print(item.is_done)
         item.name = xitem[1]
-        print(item.name)
         _item = [item.is_done, item.name]
         if self.db.update_item_status(_item):
             sw.clear_widgets()
             self.init_shopping()
-
-
 
     def delete_item(self, product: ItemToBuy):
         name = product.name

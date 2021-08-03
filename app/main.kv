@@ -1,8 +1,8 @@
 # kivy 2.0.0.
-#: import icon kivy.garden.iconfonts.icon
-#: import NavigationDrawer kivy.garden.navigationdrawer.NavigationDrawer
+#: import icon libs.garden.iconfonts.icon
+#: import NavigationDrawer libs.garden.navigationdrawer.NavigationDrawer
 #: import mtx kivy.metrics
-#: import DatePicker datepicker.datepicker.DatePicker
+#: import DatePicker libs.datepicker.datepicker.DatePicker
 
 <MainWindow>:
     id: main
@@ -28,16 +28,15 @@
                     pos: self.pos
                     size: self.size
             ListEntry:
-                text: '%s   zamknij'%icon('zmdi-apps', 28)
+                text: '%s   zamknij'%icon('zmdi-apps', '30sp')
                 markup: True
                 color: 1,1,1,1
                 background_color: 1,1,1,.1
-                halign: 'justify'
                 size_hint_y: .1
                 on_release:
                     nav.toggle_state()
             ListEntry:
-                text: '%s Dodaj zadanie'% icon('zmdi-calendar-note', 26)
+                text: '%s Dodaj zadanie'% icon('zmdi-calendar-note', '26dp')
                 markup: True
                 color: 1,1,1,1
                 size_hint_y: .1
@@ -45,7 +44,7 @@
                     nav.toggle_state()
                     app.root.add_new(self)
             ListEntry:
-                text: '%s Dodaj do zakupów'%icon('zmdi-shopping-cart-plus', 28)
+                text: '%s Dodaj do zakupów'%icon('zmdi-shopping-cart-plus', '28dp')
                 markup: True
                 color: 1,1,1,1
                 size_hint_y: .1
@@ -79,12 +78,10 @@
                     on_release: nav.toggle_state()
                 Widget:
                 BoxLayout:
-                    halign: 'right'
                     MenuButton:
                         id: tsk_btn
-                        text: icon('zmdi-assignment-check', 30)
+                        text: icon('zmdi-assignment-check', '40sp')
 						markup: True
-						align: 'center'
 						color: 1,1,1,1
 						background_color: 0, .35,0,.8
                         on_press:
@@ -93,7 +90,7 @@
                         on_release: root.ids.scrn_mngr.current = 'task_scrn'
                     MenuButton:
                         id: shp_btn
-                        text: icon('zmdi-shopping-cart', 30)
+                        text: icon('zmdi-shopping-cart', '40dp')
 						markup: True
 						color: 1,1,1,.6
 						background_color: 0, .35,0,.8
@@ -130,7 +127,6 @@
                                     size_hint_x: .5
                                     color: 0,0,0,1
                                     text_size: self.size
-                                    halign: 'left'
                                     valign: 'center'
                             BoxLayout:
                                 size_hint_y: .6
@@ -150,7 +146,6 @@
                                         spacing: mtx.dp(20)
                                         size: self.minimum_size
                                         size_hint: [None, None]
-
                         Widget:
                             size_hint_y: .10
 
@@ -170,8 +165,8 @@
                                 halign: 'left'
                                 valign: 'center'
                         BoxLayout:
-                            size_hint_y: .88
-                            padding: '20dp'
+                            size_hint_y: .78
+                            padding: ['40dp', '10dp', '40dp', '10dp']
                             id: scroll_item_parent
                             ScrollView:
                                 id: sv_shopping
@@ -185,9 +180,12 @@
                                     size: self.minimum_size
                                     padding: '10sp'
                                     spacing: '10sp'
+                        Widget:
+                            size_hint_y: .10
                     CircleButton:
                         id: cta
-                        text: '%s'%(icon('zmdi-plus',40))
+                        plus_size: '40sp'
+                        text: '%s'%(icon('zmdi-plus', self.plus_size))
 
 <NewTask>:
 	size_hint: [.8,.7]
@@ -242,16 +240,8 @@
 			padding: '4dp'
 			DatePicker:
 				id: task_date
-				size_hint_x: .5
-#				background_active: ''
-#				background_normal: ''
-#				background_color: 1,1,1,0
-#				canvas.before:
-#					Color:
-#						rgba: [1,0,0,.7]
-#					Rectangle:
-#						pos: self.pos
-#						size: [self.size[0], 1]
+				valign: 'center'
+#				size_hint_x: .5
 			Button:
 				id: task_time
 				text: '%s 00:00:00'%icon('zmdi-time-countdown')
@@ -284,7 +274,7 @@
         RoundedRectangle:
             pos: self.pos
             size: self.size
-            radius: [20]
+            radius: [30]
     Label:
         id: task_name
         text: root.name
@@ -378,6 +368,7 @@
 				halign: 'center'
 				hint_text_color: 0,0,0,.7
 				multiline: False
+				on_text_validate: app.root.add_item(root, shopping_item)
 		Widget:
 			size_hint_y: .35
 		MenuButton:
@@ -403,7 +394,7 @@
         RoundedRectangle:
             size: self.size
             pos: self.pos
-            radius: [10]
+            radius: [15]
     CheckBox:
         id: is_done
         valign: 'middle'
@@ -469,9 +460,9 @@
 	id: add_button
 	size_hint: (None, None)
 	text: ''
-	btn_size: (mtx.dp(60),mtx.dp(60))
+	btn_size: (mtx.dp(65),mtx.dp(65))
 	size: (mtx.dp(60),mtx.dp(60))
-	btn_color: (.7,.5,.5,1)
+	btn_color: (.5,.5,.8,1)
 	pos_hint: {"x":.7, 'y': .05}
 	Button:
 		text: add_button.text

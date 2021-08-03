@@ -1,5 +1,7 @@
+import kivy
+
 from app import MainApp
-from kivy.garden.iconfonts import register
+from libs.garden.iconfonts import register
 
 from os.path import dirname, join
 
