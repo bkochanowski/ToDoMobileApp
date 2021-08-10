@@ -31,8 +31,9 @@ class Database(object):
             cur.execute(sql_tasks)
             conn.commit()
             data = cur.fetchall()
-
+            print(data)
             return data
+
 
         except Exception as e:
             print(e)

@@ -20,7 +20,7 @@
         BoxLayout:
             id: sidenav
             orientation: 'vertical'
-            padding: mtx.dp(5)
+            padding: ['20sp',0,0,0]
             canvas.before:
                 Color:
                     rgba: 1,1,1,.2
@@ -28,15 +28,17 @@
                     pos: self.pos
                     size: self.size
             ListEntry:
-                text: '%s   zamknij'%icon('zmdi-apps', '30sp')
+                text: '%s zamknij menu'%icon('zmdi-apps', '28sp')
                 markup: True
                 color: 1,1,1,1
-                background_color: 1,1,1,.1
                 size_hint_y: .1
                 on_release:
                     nav.toggle_state()
+            Label:
+                text: '-----------------------------------------------------------------'
+                size_hint_y: .05
             ListEntry:
-                text: '%s Dodaj zadanie'% icon('zmdi-calendar-note', '26dp')
+                text: '%s Dodaj zadanie'%icon('zmdi-calendar-note', '28dp')
                 markup: True
                 color: 1,1,1,1
                 size_hint_y: .1
@@ -67,45 +69,49 @@
             			pos: self.pos
             			size: self.size
                 padding: 15,5,5,5
+                Widget:
+                    size_hint_x: .05
                 MenuButton:
-                    text: icon('zmdi-menu')
+                    text: icon('zmdi-menu', '35sp')
                     size_hint_x: .4
                     markup: True
                     text_size: self.size
                     font_size: mtx.sp(24)
                     valign: 'middle'
-                    halign: 'left'
+#                    halign: 'rignt'
                     on_release: nav.toggle_state()
                 Widget:
+                    size_hint_x: .2
                 BoxLayout:
                     MenuButton:
                         id: tsk_btn
-                        text: icon('zmdi-assignment-check', '40sp')
+                        text: '%s zadania'%icon('zmdi-assignment-check', '40sp')
 						markup: True
 						color: 1,1,1,1
 						background_color: 0, .35,0,.8
-                        on_press:
+                        on_release:
+                            app.root.change_to_tasks()
                             app.animate_menu_widget(self)
-                            app.root.highlight_tasks()
-                        on_release: root.ids.scrn_mngr.current = 'task_scrn'
+                            root.ids.scrn_mngr.current = 'task_scrn'
+                    Widget:
+                        size_hint_x: .2
                     MenuButton:
                         id: shp_btn
-                        text: icon('zmdi-shopping-cart', '40dp')
+                        text: '%s zakupy'%icon('zmdi-shopping-cart', '40dp')
 						markup: True
-						color: 1,1,1,.6
+						color: 1,1,1,.5
 						background_color: 0, .35,0,.8
-                        on_press:
-                            app.animate_menu_widget(self)
-                            app.root.highlight_shopping()
                         on_release:
+                            app.root.change_to_shopping()
+                            app.animate_menu_widget(self)
                             root.ids.scrn_mngr.current = 'shop_scrn'
+                    Widget:
+                        size_hint_x: .15
 
 # Screen display part of window
             ScreenManager:
                 id: scrn_mngr
                 canvas.before:
-                    Color:
-                        rgba: 1,1,1,1
                     Rectangle:
                         pos: self.pos
                         size: self.size
@@ -166,13 +172,14 @@
                                 valign: 'center'
                         BoxLayout:
                             size_hint_y: .78
-                            padding: ['40dp', '10dp', '40dp', '10dp']
+                            padding: ['40dp', '10dp', '20dp', '10dp']
                             id: scroll_item_parent
                             ScrollView:
                                 id: sv_shopping
                                 size_hint_y: None
                                 height: self.parent.height
                                 effect_cls: 'OpacityScrollEffect'
+                                bar_width:'10dp'
                                 GridLayout:
                                     id: shopping_wrapper
                                     cols: 1
@@ -200,9 +207,14 @@
 				pos: self.pos
 				size: self.size
 				radius: [7]
+		Label:
+		    size_hint_y: .1
+		    text: 'Nowe zadanie'
+		    color: 0,0,0,1
+		    bold: True
 		BoxLayout:
 			orientation: 'horizontal'
-			size_hint_y: .15
+			size_hint_y: .11
 			padding: '4dp'
 			Label:
 				text: 'Tytuł:'
@@ -210,16 +222,18 @@
 				size_hint_x: .2
 			FlatInput:
 				id: task_name
-				hint_text: 'Wpisz nazwę zadania'
-				hint_text_color: 1,1,1,1
+				font_size: mtx.sp(20)
+				hint_text: 'Wpisz nazwę'
+#				background_color: 0,.7,0,.2
 				write_tab: False
 				multiline: False
+				bold: True
 				size_hint_x: .7
-				size_hint_y: .85
+				size_hint_y: .95
 				on_text_validate: root.ids.task_details.focus = True
 		BoxLayout:
             orientation: 'horizontal'
-            size_hint_y: .3
+            size_hint_y: .4
             padding: '4dp'
             Label:
                 text: 'Opis:'
@@ -228,28 +242,43 @@
                 halign: 'left'
             TextInput:
                 id: task_details
+                font_size: mtx.sp(18)
                 size_hint_x: .8
-                size_hint_y: .7
+                size_hint_y: .6
                 hint_text: 'Wpisz szczegóły zadania'
-                hint_text_color: 0,0,0,.7
+                background_color: 0,.7,0,.2
 		Widget:
 			size_hint_y: .1
 		BoxLayout:
 			id: datetime
-			size_hint_y: .12
+			size_hint_y: .10
 			padding: '4dp'
+			Label:
+                text: icon('zmdi-calendar','20sp')
+                markup: True
+                color: 0,0,0,1
+                size_hint_x: .1
 			DatePicker:
 				id: task_date
-				valign: 'center'
-#				size_hint_x: .5
+				valign: 'bottom'
+				halign: 'center'
+				size_hint_x: .4
+			Widget:
+			    size_hint_x: .05
+			Label:
+			    text: icon('zmdi-time-countdown', '20sp')
+			    markup: True
+			    color: 0,0,0,1
+			    size_hint_x: .1
 			Button:
 				id: task_time
-				text: '%s 00:00:00'%icon('zmdi-time-countdown')
-                markup: True
+				text: '00:00:00'
 				color: 0,0,0,1
 				background_color: 0,.3,0,.4
-				size_hint_x: .5
+				size_hint_x: .4
 				on_release: root.get_time()
+			Widget:
+                size_hint_x: .05
         BoxLayout:
 		    id: submit_wrapper
 		    size_hint_y: .2
@@ -266,7 +295,7 @@
 
 <Task>:
     orientation: 'vertical'
-	padding: mtx.dp(15)
+	padding: mtx.dp(20)
 	tsk_clr: [.2, .2, .1, .65]
     canvas.before:
         Color:
@@ -291,10 +320,9 @@
 		Label:
 			text: icon('zmdi-time-countdown')
 			markup: True
-			size_hint_y: .55
+			size_hint_y: .43
 			size_hint_x: .15
 			color: 1,1,1,.9
-			halign: 'left'
 		Label:
 			id: task_time
 			text: root.time
@@ -304,7 +332,7 @@
 			halign: 'left'
 		Label:
 			text: root.date
-			size_hint_y: .5
+			size_hint_y: .55
 			text_size: self.size
 			color: 1,1,1,.9
 	Label:
@@ -328,7 +356,7 @@
                 markup: True
                 color: 1,1,1,1
                 bold: True
-                underline: True
+#                underline: True
                 on_release: app.root.get_update_task(root)
             MenuButton:
                 text: icon('zmdi-delete')
@@ -355,7 +383,7 @@
 			text: 'Dodaj produkt do listy zakupów'
 			bold: True
 			color: 0,0,0,1
-			font_size: mtx.sp(12)
+			font_size: mtx.sp(20)
 			halign: 'center'
 			valign: 'middle'
 		BoxLayout:
@@ -364,9 +392,9 @@
 			TextInput:
 				id: shopping_item
 				hint_text: 'Wpisz produkt \n do kupienia tutaj'
-				font_size: mtx.sp(18)
+				font_size: mtx.sp(20)
 				halign: 'center'
-				hint_text_color: 0,0,0,.7
+				background_color: 0,.7,0,.2
 				multiline: False
 				on_text_validate: app.root.add_item(root, shopping_item)
 		Widget:
@@ -424,8 +452,7 @@
 <ListEntry@MenuButton>:
 	text_size: self.size
 	valign: 'middle'
-	halign: 'left'
-
+    halign: 'justify'
 
 <NewButton>:
     id: no_tasks
@@ -463,7 +490,7 @@
 	btn_size: (mtx.dp(65),mtx.dp(65))
 	size: (mtx.dp(60),mtx.dp(60))
 	btn_color: (.5,.5,.8,1)
-	pos_hint: {"x":.7, 'y': .05}
+	pos_hint: {"x":.68, 'y': .05}
 	Button:
 		text: add_button.text
 		markup: True

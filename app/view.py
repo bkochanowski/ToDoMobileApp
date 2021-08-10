@@ -92,8 +92,8 @@ class MainWindow(BoxLayout):
         if not all_tasks:
             new_btn = NewButton()
             new_btn.size_hint = [None, None]
-            new_btn.size = [scroll_parent.width / 1.5, scroll_parent.height -
-                            (.35 * scroll_parent.height)]
+            new_btn.size = [scroll_parent.width / 1.9, scroll_parent.height -
+                            (.45 * scroll_parent.height)]
             new_btn.bind(on_release=self.add_new)
             uw.add_widget(new_btn)
 
@@ -106,20 +106,21 @@ class MainWindow(BoxLayout):
             if x == 'today':
                 task.tsk_clr = (.7, .45, .1, .6)
             elif x == 'past':
-                task.tsk_clr = (.7, 0, 0, .8)
+                task.tsk_clr = (.7, 0, 0, .6)
 
             task.time = time
             task.date = date
 
             task.size_hint = [None, None]
-            task.size = [scroll_parent.width / 1.5, scroll_parent.height -
-                         (.35 * scroll_parent.height)]
+            task.size = [scroll_parent.width / 1.9, scroll_parent.height -
+                         (.45 * scroll_parent.height)]
 
             uw.add_widget(task)
 
     def init_shopping(self):
         """getting all products to buy from DB on APP initialization"""
         all_items = self.db.get_items()
+        scroll_parent = Window
         sw = self.ids.shopping_wrapper
         for t in all_items:
             item = ItemToBuy()
@@ -129,8 +130,8 @@ class MainWindow(BoxLayout):
                 item.is_done.active = 1
 
             item.name = t[2]
-            item.size_hint = [1, None]
-            item.size = [1, dp(65)]
+            item.size_hint = [None, None]
+            item.size = [scroll_parent.width / 1.35, dp(65)]
 
             sw.add_widget(item)
 
@@ -140,13 +141,13 @@ class MainWindow(BoxLayout):
         else:
             return False
 
-    def highlight_shopping(self):
-        """if shopping screen is currently displayed, it turns tasks menu button slightly darker"""
-        self.ids['tsk_btn'].color = 1, 1, 1, .6
+    def change_to_shopping(self):
+        """shopping screen is currently displayed, it turns tasks menu button slightly darker"""
+        self.ids['tsk_btn'].color = 1, 1, 1, .5
 
-    def highlight_tasks(self):
-        """if task screen is currently displayed, it turns shopping menu button slightly darker"""
-        self.ids['shp_btn'].color = 1, 1, 1, .6
+    def change_to_tasks(self):
+        """task screen is currently displayed, it turns shopping menu button slightly darker"""
+        self.ids['shp_btn'].color = 1, 1, 1, .5
 
     def pulsating_button(self, dtx):
         """it animates button which adds new product to buy during on_press event"""
@@ -178,18 +179,13 @@ class MainWindow(BoxLayout):
             task.name = xtask[0].text
             task.details = xtask[1].text
             task.time = xtask[3].text
-            task.date = xtask[2].text
-            print(task.date)
-            x = self.compare_date(task.date)
-            if x == 'today':
-                task.tsk_clr = (.7, .45, .1, .6)
-            elif x == 'past':
-                task.tsk_clr = (.7, 0, 0, .8)
+            task.date = str(Dte.strptime(xtask[2].text, '%d-%m-%Y').date())
+            print(f'test {task.date}')
             task.size_hint = [None, None]
             task.size = [scroll_parent.width / 1.5, scroll_parent.height -
                          (.35 * scroll_parent.height)]
 
-            date_and_time = ' '.join([xtask[2].text, xtask[3].text])
+            date_and_time = ' '.join([task.date, xtask[3].text])
             task_ = (xtask[0].text, xtask[1].text, date_and_time)
             if self.db.add_task(task_):
                 uw.clear_widgets()
@@ -221,7 +217,7 @@ class MainWindow(BoxLayout):
         xtask = [
             task_data.ids.task_name.text,
             task_data.ids.task_details.text,
-            task_data.ids.task_date.text,
+            str(Dte.strptime(task_data.ids.task_date.text, '%d-%m-%Y').date()),
             task_data.ids.task_time.text
         ]
         error = None
@@ -239,13 +235,6 @@ class MainWindow(BoxLayout):
                 task.details = task_data.ids.task_details.text
                 task.time = task_data.ids.task_time.text
                 task.date = task_data.ids.task_date.text
-                x = self.compare_date(task.date)
-                if x == 'today':
-                    task.tsk_clr = (.7, .45, .1, .6)
-                elif x == 'past':
-                    task.tsk_clr = (.7, 0, 0, .8)
-                else:
-                    task.tsk_clr = (.2, .2, .1, .65)
             task_data.dismiss()
 
             uw.clear_widgets()
@@ -255,9 +244,9 @@ class MainWindow(BoxLayout):
         today = Dt.today()
 
         today_date = Dte.strftime(today, '%Y-%m-%d')
-        print(f' todays date: {today_date}')
-        task_date = str(Dte.strptime(date, '%d-%m-%Y').date())
-        print(f' task date: {task_date}')
+        print(f'today date: {today_date}')
+        task_date = str(Dte.strptime(date, '%Y-%m-%d').date())
+        print(f'task date: {task_date}')
 
         if today_date > task_date:
             return "past"
@@ -268,6 +257,7 @@ class MainWindow(BoxLayout):
 
     def delete_task(self, task: Task):
         name = task.name
+        scroll_parent = Window
         uw = self.ids.upcoming_wrapper
 
         if self.db.delete_task(name):
@@ -277,7 +267,8 @@ class MainWindow(BoxLayout):
         if not all_tasks:
             new_btn = NewButton()
             new_btn.size_hint = [None, None]
-            new_btn.size = [dp(200), dp(300)]
+            new_btn.size = [scroll_parent.width / 1.9, scroll_parent.height -
+                            (.45 * scroll_parent.height)]
             new_btn.bind(on_release=self.add_new)
             uw.add_widget(new_btn)
 
@@ -300,14 +291,15 @@ class MainWindow(BoxLayout):
             product = ItemToBuy()
             product.name = shopping_item.text
 
-            product.size_hint = [1, None]
-            product.size = [1, dp(65)]
+            product.size_hint = [None, None]
+            product.size = [scroll_parent.width / 1.35, dp(65)]
 
             product_ = shopping_item.text
 
             if self.db.add_item(product_):
-                sw.add_widget(product)
-            mv.dismiss()
+                sw.clear_widgets()
+                self.init_shopping()
+                mv.dismiss()
 
     def checkbox_status(self, instance, xitem: tuple):
         sw = self.ids.shopping_wrapper
