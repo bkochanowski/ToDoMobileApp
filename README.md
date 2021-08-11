@@ -1,6 +1,6 @@
 # ToDoMobileApp
 
-# 1. Installation instructions for Windows 10 
+# 1. How-To-Run instructions for Windows 10 
 (Caution: dependencies for Linux distributions are slightly different but it is possible to run the code from Linux - readme will be updated shortly):
     
     1) create local project repository 
@@ -12,9 +12,9 @@
          garden install --app navigationdrawer
          garden install --app iconfonts
          Please veryfy paths to packages above in project's main.py, view.py, main.kv, __init__.py, since 
-         new updates to kivy.garden might change path to package directory. Defaults route should be: 
+         new updates to kivy.garden might change path to package installation directory. Default route should be: 
          libs/garden/<package name>
-    5) install Material Design Iconic Font package into location app/assets
+    5) install Material Design Iconic Font package into location app/assets/fonts
        Newest package to download available here: 
        https://zavoloklom.github.io/material-design-iconic-font/index.html
     6) Now it should be possible to run the aplication from local repository.
