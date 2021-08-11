@@ -21,7 +21,7 @@
     7) It is possible to make an APK package for android, via Buildozer project. Step-by-step tutorial is 
        available here: 
        https://buildozer.readthedocs.io/en/latest/installation.html#targeting-android
-       Be advised that buildozer project works under Linux distributions only. It was tested on Windows 10 
+       Be advised that buildozer project works under Linux distributions only. It was tested on Windows10 
        WSL on Ubuntu 20.04 distribution
 
 # 2. Basic description:
@@ -32,14 +32,29 @@
         2) list of products to buy.
 
     Each item of the task consists of a title, task details of the task and a deadline which consists of 
-    date and time. The task widgets are meant to be displayed i 3 different colors depending on the date of 
-    the assumed completion. Any missed tasks with an expired deadline are shown in red color, while tasks 
-    for the current day are highlighted in yellow.
+    date and time. The task widgets are meant to be displayed i 3 different colors depending on the date 
+    of the assumed completion. Any missed tasks with an expired deadline are shown in red color, while 
+    tasks for the current day are highlighted in yellow.
 
     In order to add a new task just select "dodaj zadanie" in the context menu. In this case, a new popup 
-    window is displayed with a text field to fill and two interactive buttons for selecting the date and time. 
-    If necessary, there is a feature that makes possible to update each of the above-mentioned data in an 
-    already created task. There is a specific button for this. The application has the ability to deselect 
-    already purchased products from the list - they are then graphically marked and separated from other 
-    products still on the list.
+    window is displayed with a text field to fill and two interactive buttons for selecting the date and 
+    time. If necessary, there is a feature that makes possible to update each of the above-mentioned data 
+    in an already created task. There is a specific button for this. The application has the ability to 
+    deselect already purchased products from the list - they are then graphically marked and separated from 
+    other products still on the list.
+    
+# 3. Packages/projects used for this app
+
+    -> KivyCalendar - slightly modded Datepicker module based on KivyCalendar meant for python 2.7 This 
+    Widget is based on Oleg Kozlov (xxblx) work. Link:  https://bitbucket.org/xxblx/kivycalendar.
+    
+    -> NavigationDrawer - kivy.garden package which provides a hidden panel view designed to duplicate 
+    popular Android layout. Link: https://github.com/kivy-garden/garden.navigationdrawer
+    
+    -> Circular Date & Time Picker for Kivy - kivy.garden widget which aim is to provide a date and time 
+    selector similar to the one found in Android KitKat+. 
+    Link: https://github.com/kivy-garden/garden.circulardatetimepicker
+    
+    -> Kivy-iconfonts - Simple helper functions to make easier to use icon fonts in Labels and derived 
+    widgets. Link: https://github.com/kivy-garden/garden.iconfonts
     
