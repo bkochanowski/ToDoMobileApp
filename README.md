@@ -1,4 +1,4 @@
-"ToDoMobileApp" 
+# ToDoMobileApp
 
 # 1. Installation instructions for Windows 10 
 (Caution: dependencies for Linux distributions are slightly different but it is possible to run the code from Linux - readme will be updated shortly):
@@ -42,6 +42,8 @@
     in an already created task. There is a specific button for this. The application has the ability to 
     deselect already purchased products from the list - they are then graphically marked and separated from 
     other products still on the list.
+    
+   <a href="https://drive.google.com/uc?export=view&id=1VN4TTHCPlwVJmdEZRQQZtTP-HrdMiPYX"><img src="https://drive.google.com/uc?export=view&id=1VN4TTHCPlwVJmdEZRQQZtTP-HrdMiPYX" style="width: 650px; max-width: 100%; height: auto" title="Click to enlarge picture" />
     
 # 3. Packages/projects used for this app
 
