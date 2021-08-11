@@ -25,20 +25,21 @@
        WSL on Ubuntu 20.04 distribution
 
 # 2. Basic description:
-    Mobile application implemented in Python 3.8 using the KIVY framework dedicated to Android devices, but 
-    after compilation it should also work on the desktop/iOS. App consists of a simple interface with a toolbar 
-    at the top that allows navigation between the two available screens:
-    1) a list of tasks
-    2) a list of products to buy.
+    Mobile application implemented in Python 3.8 using the KIVY framework dedicated to Android devices, 
+    but after compilation it should also work on the desktop/iOS. App consists of a simple interface with 
+    a toolbar at the top that allows navigation between the two available screens:
+        1) list of tasks
+        2) list of products to buy.
 
-    Each item of the task consists of a title, task details of the task and a deadline which consists of date 
-    and time. The task widgets are meant to be displayed i 3 different colors depending on the date of the assumed 
-    completion. Any missed tasks with an expired deadline are shown in red color, while tasks for the current day 
-    are highlighted in yellow.
+    Each item of the task consists of a title, task details of the task and a deadline which consists of 
+    date and time. The task widgets are meant to be displayed i 3 different colors depending on the date of 
+    the assumed completion. Any missed tasks with an expired deadline are shown in red color, while tasks 
+    for the current day are highlighted in yellow.
 
-    In order to add a new task just select "dodaj zadanie" in the context menu. In this case, a new popup window is 
-    displayed with a text field to fill and two interactive buttons for selecting the date and time. If necessary, it 
-    is possible to update each of the above-mentioned data in an already created task. 
-    There is a special button for this. The application has the ability to deselect already purchased products from the 
-    list - they are then graphically marked and separated from other products still on the list.
+    In order to add a new task just select "dodaj zadanie" in the context menu. In this case, a new popup 
+    window is displayed with a text field to fill and two interactive buttons for selecting the date and time. 
+    If necessary, there is a feature that makes possible to update each of the above-mentioned data in an 
+    already created task. There is a specific button for this. The application has the ability to deselect 
+    already purchased products from the list - they are then graphically marked and separated from other 
+    products still on the list.
     
