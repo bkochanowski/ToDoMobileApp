@@ -43,7 +43,7 @@
     deselect already purchased products from the list - they are then graphically marked and separated from 
     other products still on the list.
     
-   <a href="https://drive.google.com/uc?export=view&id=1VN4TTHCPlwVJmdEZRQQZtTP-HrdMiPYX"><img src="https://drive.google.com/uc?export=view&id=1VN4TTHCPlwVJmdEZRQQZtTP-HrdMiPYX" style="width: 650px; max-width: 100%; height: auto" title="Click to enlarge picture" />
+   <a href="https://drive.google.com/uc?export=view&id=1VN4TTHCPlwVJmdEZRQQZtTP-HrdMiPYX"><img src="https://drive.google.com/uc?export=view&id=1VN4TTHCPlwVJmdEZRQQZtTP-HrdMiPYX" style="width: 300px; max-width: 70%; height: auto" title="Click to enlarge picture" />
     
 # 3. Packages/projects used for this app
 
