@@ -40,8 +40,8 @@
     window is displayed with a text field to fill and two interactive buttons for selecting the date and 
     time. If necessary, there is a feature that makes possible to update each of the above-mentioned data 
     in an already created task. There is a specific button for this. The application has the ability to 
-    deselect already purchased products from the list - they are then graphically marked and separated from 
-    other products still on the list.
+    deselect already purchased products from the list - they are then graphically marked and separated 
+    from other products still on the list.
     
    <a href="https://drive.google.com/uc?export=view&id=1VN4TTHCPlwVJmdEZRQQZtTP-HrdMiPYX"><img src="https://drive.google.com/uc?export=view&id=1VN4TTHCPlwVJmdEZRQQZtTP-HrdMiPYX" style="width: 300px; max-width: 70%; height: auto" title="Click to enlarge picture" />
     
