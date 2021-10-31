@@ -1,12 +1,18 @@
 # ToDoMobileApp
 
-# 1. How-To-Run instructions for Windows 10 
+# 1. How-To-Run instructions for Windows 10 - created and tested on Python 3.8.0 distribution
 (Caution: dependencies for Linux distributions are slightly different but it is possible to run the code from Linux - readme will be updated shortly):
     
     1) create local project repository 
-    2) set virtual enviroment
+    2) set virtual enviroment through Windows 10 GUI:
+        1. create or modify environment variables on Windows 10:
+        2. On the Windows taskbar, right-click the Windows icon and select System.
+        3. In the Settings window, under Related Settings, click Advanced system settings
+        4. On the Advanced tab, click Environment Variables
+        5. Click New to create a new environment variable. Click Edit to modify an existing environment variable.
+        6. After creating or modifying the environment variable, click Apply and then OK to have the change take effect. 
     3) install dependencies from requirements.txt
-    4)  install additional packages from kivy.garden with terminal commands below:
+    4) install additional packages from kivy.garden with terminal commands below:
          garden install --app circularlayout 
          garden install --app circulardatetimepicker
          garden install --app navigationdrawer
