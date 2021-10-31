@@ -1,12 +1,18 @@
 # ToDoMobileApp
 
-# 1. How-To-Run instructions for Windows 10 
+# 1. How-To-Run instructions for Windows 10 - created and tested on Python 3.8.0 distribution
 (Caution: dependencies for Linux distributions are slightly different but it is possible to run the code from Linux - readme will be updated shortly):
     
     1) create local project repository 
-    2) set virtual enviroment
+    2) set virtual enviroment through Windows 10 GUI:
+        1. create or modify environment variables on Windows 10:
+        2. On the Windows taskbar, right-click the Windows icon and select System.
+        3. In the Settings window, under Related Settings, click Advanced system settings
+        4. On the Advanced tab, click Environment Variables
+        5. Click New to create a new environment variable. Click Edit to modify an existing environment variable.
+        6. After creating or modifying the environment variable, click Apply and then OK to have the change take effect. 
     3) install dependencies from requirements.txt
-    4)  install additional packages from kivy.garden with terminal commands below:
+    4) install additional packages from kivy.garden with terminal commands below:
          garden install --app circularlayout 
          garden install --app circulardatetimepicker
          garden install --app navigationdrawer
@@ -40,8 +46,8 @@
     window is displayed with a text field to fill and two interactive buttons for selecting the date and 
     time. If necessary, there is a feature that makes possible to update each of the above-mentioned data 
     in an already created task. There is a specific button for this. The application has the ability to 
-    deselect already purchased products from the list - they are then graphically marked and separated from 
-    other products still on the list.
+    deselect already purchased products from the list - they are then graphically marked and separated 
+    from other products still on the list.
     
    <a href="https://drive.google.com/uc?export=view&id=1VN4TTHCPlwVJmdEZRQQZtTP-HrdMiPYX"><img src="https://drive.google.com/uc?export=view&id=1VN4TTHCPlwVJmdEZRQQZtTP-HrdMiPYX" style="width: 300px; max-width: 70%; height: auto" title="Click to enlarge picture" />
     
